@@ -31,6 +31,9 @@
         <li class="nav-item">
           <a class="nav-link disabled" aria-disabled="true">Disabled</a>
         </li>
+      	<li class="nav-item">
+	      	<button type="button" class="btn btn-success">View Cart</button>
+	     </li>
       </ul>
     </div>
   </div>
