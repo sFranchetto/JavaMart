@@ -22,35 +22,9 @@
 	<%@ include file="common/navbar.jsp" %>
 	
 	<div class="container">
-    <h1>Product Showcase</h1>
-    <% List<Product> products = ProductFactory.returnAllProducts(); %>
-    <div class="product-container">
-	    <%
-	    int count = 0; // Initialize a count variable
-	    for (Product product : products) {
-	        if (count % 3 == 0) {
-	    %>
-		    <div class="row">
-		    <% } %>
-		        <div class="col-md-4">
-		            <div class="card mb-4">
-		                <img src="..." class="card-img-top" alt="...">
-		                <div class="card-body">
-		                    <strong><%= product.getName() %></strong><br/>
-		                    <%= product.getDescription() %><br/>
-		                    Price: <%= product.getPrice() %><br/>
-		                    <button type="button" class="btn btn-primary">Add to Cart</button>
-		                </div>
-		            </div>
-		     	</div>
-		    <%
-		    count++;
-		    if (count % 3 == 0) {
-		    %>
-    		</div>
-    <% } %>
-    <% } %>
-</div>
-</div>
+    <h1>Welcome to JavaMart</h1>
+    <a href="./products">View product catalog</a>
+    
+	</div>
 </body>
 </html>
