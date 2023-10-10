@@ -20,7 +20,7 @@
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#">Home</a>
+          <a class="nav-link active" aria-current="page" href="/JavaMart">Home</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="#">Features</a>
@@ -33,7 +33,21 @@
         </li>
       </ul>
     </div>
+  <div class ="ml-auto">
+  		<% if(session.getAttribute("isStaff").equals(true)){ %>
+  		<a class="nav-link pe-3" href="./login">
+	  		You are currently logged in as Staff
+	  		<button type="button" class="btn btn-primary"> Log out</button>
+	  	</a>
+		<%}%>
+		<% if(session.getAttribute("isStaff").equals(false)) { %>
+	  	<a class="nav-link pe-3" href="./login">
+	  		You are not currently logged in.
+	  		<button type="button" class="btn btn-primary"> Staff Login</button>
+	  	</a>
+	  	<%} %>
   </div>
+</div>
 </nav>
 </body>
 </html>
