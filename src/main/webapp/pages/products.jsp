@@ -19,7 +19,7 @@
     </style>
  </head>
 <body>
-	<%@ include file="common/navbar.jsp" %>
+	<%@ include file="../common/navbar.jsp" %>
 	
 	<div class="container">
     <h1>Product Showcase</h1>
