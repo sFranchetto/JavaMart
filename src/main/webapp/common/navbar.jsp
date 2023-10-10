@@ -34,18 +34,29 @@
       </ul>
     </div>
   <div class ="ml-auto">
-  		<% if(session.getAttribute("isStaff").equals(true)){ %>
-  		<a class="nav-link pe-3" href="./login">
-	  		You are currently logged in as Staff
-	  		<button type="button" class="btn btn-primary"> Log out</button>
-	  	</a>
-		<%}%>
-		<% if(session.getAttribute("isStaff").equals(false)) { %>
+  		<%Object staff = session.getAttribute("isStaff"); %>
+  		<% if(staff == null || staff.equals(false)){ %>
+		<%} else {%>
+			<a class="nav-link pe-3" href="./create_product">
+			  	<button type="button" class="btn btn-secondary">Create product</button>
+			 </a>
+	  	<%} %>
+  </div>
+  <div class ="ml-auto">
+  		<% if(staff == null || staff.equals(false)){ %>
 	  	<a class="nav-link pe-3" href="./login">
 	  		You are not currently logged in.
 	  		<button type="button" class="btn btn-primary"> Staff Login</button>
 	  	</a>
+		<%} else {%>
+			<form action="logout" method="post">
+			<a class="nav-link pe-3" href="./logout">
+				You are currently logged in as Staff. 
+			  	<button type="submit" class="btn btn-primary"> Log out</button>
+			 </a>
+			 </form>
 	  	<%} %>
+	  	
   </div>
 </div>
 </nav>

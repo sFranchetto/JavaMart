@@ -15,6 +15,11 @@ public class ProductFactory {
 		products.add(new Product("Product 5", "Description for Product 5", "Vendor E", "product-5", 59.99, "SKU-005"));
 	};
 	
+	
+	public static void add(Product product) {
+		products.add(new Product(product.getName(), "", "", "", 0.0, product.getSKU()));
+	}
+	
 	public static List<Product> returnAllProducts(){
 		return products;
 	}

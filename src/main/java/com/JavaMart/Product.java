@@ -1,5 +1,7 @@
 package com.JavaMart;
 
+import java.util.List;
+
 public class Product {
 	
 	String name;
@@ -9,6 +11,8 @@ public class Product {
 	double price;
 	String SKU;
 	
+	public Product() {
+	}
 	
 	public Product(String name, String description, String vendor, String urlSlug, double price, String SKU) {
 		this.name = name;
@@ -67,5 +71,13 @@ public class Product {
 
     public void setSKU(String SKU) {
         this.SKU = SKU;
+    }
+    
+    public void CreateProduct(String name, String sku) {
+    	Product product = new Product();
+    	product.setName(name);
+    	product.setSKU(sku);
+    	
+    	ProductFactory.add(product);	
     }
 }

@@ -24,7 +24,7 @@ public class LoginServlet extends HttpServlet{
 			//System.out.println(session.getAttribute("isStaff"));
 			res.sendRedirect("./products");
 		}else {
-			System.out.println("sad");
+			//System.out.println("sad");
 			session.setAttribute("isStaff", false);
 			res.sendRedirect("./login");
 		}
