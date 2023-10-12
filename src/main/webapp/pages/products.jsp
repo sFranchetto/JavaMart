@@ -40,6 +40,9 @@
 		                    <%= product.getDescription() %><br/>
 		                    Price: <%= product.getPrice() %><br/>
 		                    <button type="button" class="btn btn-primary">Add to Cart</button>
+		                    <a href="./products/<%= product.getUrlSlug() %>">
+		                    	<button type="button" class="btn btn-primary">Details</button>
+		                    </a>
 		                </div>
 		            </div>
 		     	</div>

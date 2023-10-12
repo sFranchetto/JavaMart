@@ -80,4 +80,15 @@ public class Product {
     	
     	ProductFactory.add(product);	
     }
+    
+    public static Product GetProductBySlug(String slug) {
+    	List<Product> products = ProductFactory.returnAllProducts();
+    	slug = slug.substring(1);
+    	for (Product product : products) {
+    		if(product.getUrlSlug().equals(slug)) {
+    			return product;
+    		}
+    	}
+    	return null; //product not found by slug name.
+    }
 }
