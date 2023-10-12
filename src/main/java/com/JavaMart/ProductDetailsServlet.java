@@ -15,14 +15,10 @@ public class ProductDetailsServlet extends HttpServlet {
 	public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
 		String slug = req.getPathInfo();
 		//System.out.println(slug);
-		Product product = Product.getProductBySlug(slug);
-		if (product != null) {
-			req.setAttribute("product", product);
-			req.getRequestDispatcher("/pages/product_details.jsp").forward(req, res);
-			
-		}else {
-			System.out.println("slug doesn't exist");
-		}
+		Product product = Product.GetProductBySlug(slug);
+		req.setAttribute("product", product);
+		req.getRequestDispatcher("/pages/product_details.jsp").forward(req, res);
+		
 	}
 
 }

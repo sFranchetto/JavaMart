@@ -1,5 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
+<%@ page import="java.util.List" %>
+<%@ page import="com.JavaMart.Product" %>
+<%@ page import="com.JavaMart.ProductFactory" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,8 +12,19 @@
 <body>
 <%@ include file="../common/navbar.jsp" %>
 	
+	<% Product product = (Product) request.getAttribute("product"); %>
 	<div class="container">
-	<h4>sad</h4>
+	<h1>Product Details</h1>
+	<% if (product != null) {%>
+		<p><strong>Name:</strong> <%= product.getName() %> </p>
+		<p><strong>Description:</strong> <%= product.getDescription() %> </p>
+		<p><strong>Vendor:</strong> <%= product.getVendor() %> </p>
+		<p><strong>urlSlug:</strong> <%= product.getUrlSlug() %> </p>
+		<p><strong>Price:</strong> $<%= product.getPrice() %> </p>
+		<p><strong>SKU:</strong> <%= product.getSKU() %> </p>
+	<% } else { %>
+		<p>The slug you entered was not found.
+	<% } %>
 	
 	</div>
 </body>

@@ -81,10 +81,10 @@ public class Product {
     	ProductFactory.add(product);	
     }
     
-    public static Product getProductBySlug(String slug) {
+    public static Product GetProductBySlug(String slug) {
     	List<Product> products = ProductFactory.returnAllProducts();
+    	slug = slug.substring(1);
     	for (Product product : products) {
-    		slug = slug.substring(1);
     		if(product.getUrlSlug().equals(slug)) {
     			return product;
     		}
