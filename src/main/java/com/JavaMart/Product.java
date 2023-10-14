@@ -72,15 +72,7 @@ public class Product {
     public void setSKU(String SKU) {
         this.SKU = SKU;
     }
-    
-    public void CreateProduct(String name, String sku) {
-    	Product product = new Product();
-    	product.setName(name);
-    	product.setSKU(sku);
-    	
-    	ProductFactory.add(product);	
-    }
-    
+
     public static Product GetProductBySlug(String slug) {
     	List<Product> products = ProductFactory.returnAllProducts();
     	slug = slug.substring(1);

@@ -50,7 +50,7 @@
 	  	</a>
 		<%} else {%>
 			<form action="logout" method="post">
-			<a class="nav-link pe-3" href="./logout">
+			<a class="nav-link pe-3" href="/products/logout">
 				You are currently logged in as Staff. 
 			  	<button type="submit" class="btn btn-primary"> Log out</button>
 			 </a>
