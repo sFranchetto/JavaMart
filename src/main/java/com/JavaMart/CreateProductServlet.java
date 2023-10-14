@@ -11,15 +11,14 @@ import javax.servlet.http.HttpSession;
 
 @WebServlet("/create_product")
 public class CreateProductServlet extends HttpServlet{
-	
-	
-	Product newProduct = new Product();
 
 	public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
-		String productName = req.getParameter("productName");
-		String productSKU = req.getParameter("productSKU");    
-		newProduct.CreateProduct(productName, productSKU);
-		
+		HttpSession session = req.getSession();
+		if(session.getAttribute("isStaff").equals(true)){
+			String productName = req.getParameter("productName");
+			String productSKU = req.getParameter("productSKU");    
+			Staff.CreateProduct(productName, productSKU);
+		}
 		res.sendRedirect("./products");
 	}
 	

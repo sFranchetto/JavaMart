@@ -11,7 +11,7 @@ import javax.servlet.http.HttpSession;
 
 @WebServlet("/products/*")
 public class ProductDetailsServlet extends HttpServlet {
-	
+		
 	public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
 		String slug = req.getPathInfo();
 		//System.out.println(slug);
@@ -19,6 +19,21 @@ public class ProductDetailsServlet extends HttpServlet {
 		req.setAttribute("product", product);
 		req.getRequestDispatcher("/pages/product_details.jsp").forward(req, res);
 		
+	}
+	
+	protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+		String slug = req.getPathInfo();
+		String productName = req.getParameter("newName");
+		String productDesc = req.getParameter("newDesc");
+		String productVendor = req.getParameter("newVendor");
+		String productSlug = req.getParameter("newSlug");
+		double productPrice = Double.parseDouble(req.getParameter("newPrice"));
+		String productSKU = req.getParameter("newSKU");
+		
+		//System.out.println(productSlug + "<");
+		Staff.UpdateProduct(productSKU, productName, productDesc, productVendor, productSlug, productPrice);
+		slug = slug.substring(1);
+		res.sendRedirect("./" + slug);
 	}
 
 }
