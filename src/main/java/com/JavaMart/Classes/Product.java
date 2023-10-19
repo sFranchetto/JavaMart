@@ -88,7 +88,6 @@ public class Product {
     }
     
     public static Product GetProduct(String sku) {
-    	System.out.println(sku + "]");
     	List<Product> products = ProductFactory.returnAllProducts();
     	for (Product product : products) {
     		if(product.getSKU().equals(sku)) {

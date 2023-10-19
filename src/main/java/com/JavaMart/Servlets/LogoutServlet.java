@@ -17,10 +17,10 @@ public class LogoutServlet extends HttpServlet{
 		HttpSession session = req.getSession();
 		session.setAttribute("isStaff", false);
 		session.invalidate();
-		res.sendRedirect("./products");
+		res.sendRedirect("/JavaMart/pages/logout.jsp");
 	}
 	
-	public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException { res.sendRedirect("./products"); }
+	public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {doPost(req, res); }
 		
-
+		
 }
