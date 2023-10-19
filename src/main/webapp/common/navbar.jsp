@@ -42,12 +42,15 @@
 			 </a>
 	  	<%} %>
   </div>
-  <div class ="ml-auto">
+  <div class ="ml-auto" style="display: flex;">
   		<% if(staff == null || staff.equals(false)){ %>
-	  	<a class="nav-link pe-3" href="/JavaMart/login">
-	  		You are not currently logged in.
-	  		<button type="button" class="btn btn-primary"> Staff Login</button>
-	  	</a>
+		  	<a class="nav-link pe-3" href="/JavaMart/cart">
+		  		<button type="button" class="btn btn-success"> My Cart </button>
+		  	</a>
+		  	<a class="nav-link pe-3" href="/JavaMart/login">
+		  		You are not currently logged in.
+		  		<button type="button" class="btn btn-primary"> Staff Login</button>
+		  	</a>
 		<%} else {%>
 			<form action="logout" method="post">
 			<a class="nav-link pe-3" href="/JavaMart/logout">

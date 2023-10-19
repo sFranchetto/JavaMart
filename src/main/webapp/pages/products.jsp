@@ -39,7 +39,9 @@
 		                    <strong><%= product.getName() %></strong><br/>
 		                    <%= product.getDescription() %><br/>
 		                    Price: <%= product.getPrice() %><br/>
-		                    <button type="button" class="btn btn-primary">Add to Cart</button>
+		                    <form action="./cart/products/<%= product.getUrlSlug() %>" method="post">
+			                    <button type="submit" class="btn btn-primary">Add to Cart</button>
+			                 </form>
 		                    <a href="./products/<%= product.getUrlSlug() %>">
 		                    	<button type="button" class="btn btn-primary">Details</button>
 		                    </a>
