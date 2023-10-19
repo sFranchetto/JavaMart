@@ -1,6 +1,8 @@
-package com.JavaMart;
+package com.JavaMart.Classes;
 
 import java.util.List;
+
+import com.JavaMart.ProductFactory;
 
 public class Product {
 	
@@ -81,6 +83,18 @@ public class Product {
     			return product;
     		}
     	}
+    	System.out.println("Returning null");
     	return null; //product not found by slug name.
+    }
+    
+    public static Product GetProduct(String sku) {
+    	List<Product> products = ProductFactory.returnAllProducts();
+    	for (Product product : products) {
+    		if(product.getSKU().equals(sku)) {
+    			return product;
+    		}
+    	}
+    	System.out.println("Returning null");
+    	return null; //product was not found by sku
     }
 }

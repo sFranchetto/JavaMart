@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <%@ page import="java.util.List" %>
-<%@ page import="com.JavaMart.Product" %>
+<%@ page import="com.JavaMart.Classes.Product" %>
 <%@ page import="com.JavaMart.ProductFactory" %>
 <!DOCTYPE html>
 <html>
@@ -25,7 +25,8 @@
 	    <h1>Product Modification</h1>
 	    <form action="/JavaMart/products/<%= newSlug %>" method="post">
 	        <% Product product = Product.GetProductBySlug(slug); %>
-	        <p><strong>Editing:</strong> <%= product.getName() %> </p>
+	        <% Product productNew = Product.GetProduct(product.getSKU()); %>
+	        <p><strong>Editing: <%= productNew.getName() %></strong> <%= product.getName() %> </p>
 	        <label for="name">Product Name:</label><br>
 	        <input type="text" id="name" value=<%= product.getName() %> name="newName"><br>
 	        <label for="name">Product Desc:</label><br>

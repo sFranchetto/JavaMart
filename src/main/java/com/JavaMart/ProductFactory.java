@@ -2,6 +2,7 @@ package com.JavaMart;
 
 import java.util.ArrayList;
 import java.util.List;
+import com.JavaMart.Classes.*;
 
 public class ProductFactory {
 	
@@ -17,7 +18,7 @@ public class ProductFactory {
 	
 	
 	public static void add(Product product) {
-		products.add(new Product(product.getName(), "", "", "", 0.0, product.getSKU()));
+		products.add(new Product(product.getName(), "", "", product.getUrlSlug(), 0.0, product.getSKU()));
 	}
 	
 	public static List<Product> returnAllProducts(){

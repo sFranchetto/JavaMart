@@ -1,5 +1,7 @@
-package com.JavaMart;
+package com.JavaMart.Servlets;
 
+import com.JavaMart.*;
+import com.JavaMart.Classes.*;
 import java.io.IOException;
 import java.util.List;
 import javax.servlet.ServletException;
@@ -20,3 +22,4 @@ public class ProductServlet extends HttpServlet{
 		req.getRequestDispatcher("./pages/products.jsp").forward(req, res);
 	}
 }
+

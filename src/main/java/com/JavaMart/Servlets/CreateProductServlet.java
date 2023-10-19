@@ -1,4 +1,6 @@
-package com.JavaMart;
+package com.JavaMart.Servlets;
+import com.JavaMart.Classes.*;
+import com.JavaMart.Classes.User.Staff;
 
 import java.io.IOException;
 import java.util.List;
@@ -9,30 +11,22 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-@WebServlet("/login")
-public class LoginServlet extends HttpServlet{
-	
-	private final String passcode = "secret";
-	
-	
+@WebServlet("/create_product")
+public class CreateProductServlet extends HttpServlet{
+
 	public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
-		
-		String userInput = req.getParameter("password");
 		HttpSession session = req.getSession();
-		if(userInput.equals(passcode) && userInput != null) {
-			session.setAttribute("isStaff", true);
-			//System.out.println(session.getAttribute("isStaff"));
-			res.sendRedirect("./products");
-		}else {
-			//System.out.println("sad");
-			session.setAttribute("isStaff", false);
-			res.sendRedirect("./login");
+		if(session.getAttribute("isStaff").equals(true)){
+			String productName = req.getParameter("productName");
+			String productSKU = req.getParameter("productSKU");    
+			Staff.CreateProduct(productName, productSKU);
 		}
+		res.sendRedirect("./products");
 	}
 	
 	public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
 		
 
-		req.getRequestDispatcher("/pages/login.jsp").forward(req, res);
+		req.getRequestDispatcher("/pages/create_product.jsp").forward(req, res);
 	}
 }

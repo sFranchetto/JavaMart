@@ -44,13 +44,13 @@
   </div>
   <div class ="ml-auto">
   		<% if(staff == null || staff.equals(false)){ %>
-	  	<a class="nav-link pe-3" href="./login">
+	  	<a class="nav-link pe-3" href="/JavaMart/login">
 	  		You are not currently logged in.
 	  		<button type="button" class="btn btn-primary"> Staff Login</button>
 	  	</a>
 		<%} else {%>
 			<form action="logout" method="post">
-			<a class="nav-link pe-3" href="/products/logout">
+			<a class="nav-link pe-3" href="/JavaMart/logout">
 				You are currently logged in as Staff. 
 			  	<button type="submit" class="btn btn-primary"> Log out</button>
 			 </a>
