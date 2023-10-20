@@ -1,8 +1,8 @@
 package com.JavaMart.Servlets;
 
-import com.JavaMart.*;
 import com.JavaMart.Classes.*;
 import com.JavaMart.Classes.User.Customer;
+import com.JavaMart.Classes.User.Staff;
 
 import java.io.IOException;
 import java.util.List;
@@ -13,22 +13,23 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-@WebServlet("/products")
-public class ProductServlet extends HttpServlet{
+@WebServlet("/cart")
+public class CartServlet extends HttpServlet {
 	
 	public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
 		
-		List<Product> products = ProductFactory.returnAllProducts();
+		String user = Customer.getUser();
 		
-		HttpSession session = req.getSession();
+		List<Product> cart = Cart.getCart(user);
 		
-		if(session.getAttribute("isStaff") == null) {
-			Customer user = new Customer();
-			System.out.println(User.getUser());
-		}
+		System.out.println("============");
+		System.out.println(cart.getClass());
+		System.out.println(cart.size());
+		Cart.showCart();
 		
-		req.setAttribute("products", products);
-		req.getRequestDispatcher("./pages/products.jsp").forward(req, res);
+		req.setAttribute("cart", cart);
+		req.getRequestDispatcher("/pages/user_cart.jsp").forward(req, res);
 	}
+	
+	public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {}
 }
-

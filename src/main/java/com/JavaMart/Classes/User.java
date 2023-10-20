@@ -5,25 +5,24 @@ import java.util.List;
 import com.JavaMart.ProductFactory;
 
 public class User{
-	String userId;
 	
-	public class Customer extends User{
-		List<Product> cart;
+	static String user;
+	
+	public void setUser(String user) {
+		this.user = user;
+	}
+	
+	public static String getUser() {
+        return user;
+    }
+	
+	public static class Customer extends User{
 		
-		//TODO
-		public void getCart() {
-			
+		public Customer() {
+			setUser("TempUser");
 		}
 		
-		//TODO
-		public void AddProductToCart(Product product) {
-			
-		}
 		
-		//TODO
-		public void RemoveProductFromCart(Product product) {
-			
-		}
 	}
 	
 	public class Staff extends User{
