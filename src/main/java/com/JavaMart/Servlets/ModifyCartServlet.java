@@ -20,23 +20,40 @@ public class ModifyCartServlet extends HttpServlet {
 	
 	public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
 		
-		
-		
-		String slug = req.getPathInfo();
-		String user = Customer.getUser();	
-		
-		Product product = Product.GetProductBySlug(slug);
-		
-		cart.AddProductToCart(user, product.getSKU());
-		System.out.println(cart.getClass());
-		
-		res.sendRedirect("/JavaMart/cart");
+		String method = req.getParameter("_method");
+	    if ("delete".equals(method)) {
+	        // Call your doDelete method here
+	        doDelete(req, res);
+	    } else {
+
+			String slug = req.getPathInfo();
+			String user = Customer.getUser();	
+			
+			Product product = Product.GetProductBySlug(slug);
+			
+			cart.AddProductToCart(user, product.getSKU());
+			System.out.println(cart.getClass());
+			
+			res.sendRedirect("/JavaMart/cart");
+	    }
 	}
 	
 	public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
 		req.getRequestDispatcher("/pages/user_cart.jsp").forward(req, res);
 	}
 	
-	public void doDelete(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {}
+	public void doDelete(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
+
+		
+		String slug = req.getPathInfo();
+		String user = Customer.getUser();	
+		
+		Product product = Product.GetProductBySlug(slug);
+		
+		cart.RemoveProductFromCart(user, product.getSKU());
+		System.out.println(cart.getClass());
+		
+		res.sendRedirect("/JavaMart/cart");
+	}
 
 }

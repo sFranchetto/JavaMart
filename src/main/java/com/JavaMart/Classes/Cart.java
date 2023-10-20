@@ -27,8 +27,13 @@ public class Cart {
 	}
 			
 	//TODO
-	public void RemoveProductFromCart(Product product) {
-				
+	public void RemoveProductFromCart(String user, String sku) {
+		System.out.println("User: " + user);
+		System.out.println("Sku: " + sku);
+		Product product = Product.GetProduct(sku);
+		cart.remove(product);
+		System.out.println(cart.size());
+		showCart();
 	}
 	
 	public static void showCart() {

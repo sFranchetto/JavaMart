@@ -23,9 +23,11 @@ public class CartServlet extends HttpServlet {
 		List<Product> cart = Cart.getCart(user);
 		
 		System.out.println("============");
+		System.out.println(cart.getClass());
+		System.out.println(cart.size());
 		Cart.showCart();
 		
-		//req.setAttribute("cart", cart);
+		req.setAttribute("cart", cart);
 		req.getRequestDispatcher("/pages/user_cart.jsp").forward(req, res);
 	}
 	
