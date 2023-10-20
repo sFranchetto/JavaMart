@@ -1,5 +1,8 @@
 package com.JavaMart.Classes;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.List;
 
 import com.JavaMart.ProductFactory;
@@ -46,9 +49,35 @@ public class User{
 	    	ProductFactory.add(product);	
 		}
 		
-		public List<Product> downloadProductList(){
+		public static File DownloadProductList(){
 			
-			return null;
+			List<Product> products = ProductFactory.returnAllProducts();
+			File file = new File("products.csv");
+			
+			
+			try(FileWriter writer = new FileWriter(file)){
+				writer.append("Name,Description,Vendor,URL_slug,SKU,price\n");
+				for(Product product : products) {
+					writer.append(product.getName())
+							.append(",")
+							.append(product.getDescription())
+							.append(",")
+							.append(product.getVendor())
+							.append(",")
+							.append(product.getUrlSlug())
+							.append(",")
+							.append(product.getSKU())
+							.append(",")
+							.append(String.valueOf(product.getPrice()))
+							.append("\n");
+				}
+				
+			} catch (IOException e) {
+	            System.out.println("An error occurred while creating the CSV file.");
+	            e.printStackTrace();
+	        }
+			return file;
+			
 		}
 	}
 }
