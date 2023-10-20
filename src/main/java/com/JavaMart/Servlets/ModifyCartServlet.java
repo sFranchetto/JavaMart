@@ -1,5 +1,6 @@
 package com.JavaMart.Servlets;
 
+import com.JavaMart.OperationNotAllowedException;
 import com.JavaMart.Classes.*;
 import com.JavaMart.Classes.User.Customer;
 import com.JavaMart.Classes.User.Staff;
@@ -17,12 +18,12 @@ import javax.servlet.http.HttpSession;
 public class ModifyCartServlet extends HttpServlet {
 	
 	Cart cart = new Cart();
+	String user;
 	
 	public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
 		
 		String method = req.getParameter("_method");
 	    if ("delete".equals(method)) {
-	        // Call your doDelete method here
 	        doDelete(req, res);
 	    } else {
 
@@ -32,14 +33,24 @@ public class ModifyCartServlet extends HttpServlet {
 			Product product = Product.GetProductBySlug(slug);
 			
 			cart.AddProductToCart(user, product.getSKU());
-			System.out.println(cart.getClass());
 			
 			res.sendRedirect("/JavaMart/cart");
 	    }
 	}
 	
 	public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
-		req.getRequestDispatcher("/pages/user_cart.jsp").forward(req, res);
+		HttpSession session = req.getSession();
+		user = CheckSession(session);
+		if (user.equals("staff")) {
+			try {
+				throw new OperationNotAllowedException("Staff members are not allowed to access the cart.");
+			}catch (OperationNotAllowedException e) {
+                req.setAttribute("e", e);
+                req.getRequestDispatcher("/common/error_page.jsp").forward(req, res);
+            }
+		}else {
+			req.getRequestDispatcher("/pages/user_cart.jsp").forward(req, res);
+		}
 	}
 	
 	public void doDelete(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
@@ -51,9 +62,17 @@ public class ModifyCartServlet extends HttpServlet {
 		Product product = Product.GetProductBySlug(slug);
 		
 		cart.RemoveProductFromCart(user, product.getSKU());
-		System.out.println(cart.getClass());
 		
 		res.sendRedirect("/JavaMart/cart");
+	}
+	
+	
+	private String CheckSession(HttpSession session) {
+		if(session.getAttribute("isStaff") == null) {
+			return "TempUser";
+		}else {
+			return "staff";
+		}
 	}
 
 }

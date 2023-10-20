@@ -20,12 +20,7 @@ public class ProductServlet extends HttpServlet{
 		
 		List<Product> products = ProductFactory.returnAllProducts();
 		
-		HttpSession session = req.getSession();
 		
-		if(session.getAttribute("isStaff") == null) {
-			Customer user = new Customer();
-			System.out.println(User.getUser());
-		}
 		
 		req.setAttribute("products", products);
 		req.getRequestDispatcher("./pages/products.jsp").forward(req, res);

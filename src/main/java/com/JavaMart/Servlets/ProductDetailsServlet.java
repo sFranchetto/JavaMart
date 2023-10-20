@@ -27,7 +27,6 @@ public class ProductDetailsServlet extends HttpServlet {
 	
 	protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		String slug = req.getPathInfo();
-		System.out.println(slug);
 		if(slug.equals("/logout")) {
 			res.sendRedirect("/JavaMart/pages/logout.jsp");
 		}else {
