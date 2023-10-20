@@ -20,8 +20,14 @@
  </head>
 <body>
 	<%@ include file="../common/navbar.jsp" %>
-	
+	<% if(staff == null || staff.equals(false)){ %>
+		<%} else {%>
+			<div class="px-3 d-flex justify-content-end">
+		   		<a href="./products/download"> Download product catalog </a>
+		   	</div>
+		 <%} %>
 	<div class="container">
+	
     <h1>Product Showcase</h1>
     <% List<Product> products = ProductFactory.returnAllProducts(); %>
     <div class="product-container">
@@ -34,7 +40,6 @@
 		    <% } %>
 		        <div class="col-md-4">
 		            <div class="card mb-4">
-		                <img src="..." class="card-img-top" alt="...">
 		                <div class="card-body">
 		                    <strong><%= product.getName() %></strong><br/>
 		                    <%= product.getDescription() %><br/>
@@ -55,6 +60,7 @@
     		</div>
     <% } %>
     <% } %>
+    
 </div>
 </div>
 </body>
