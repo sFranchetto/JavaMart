@@ -16,16 +16,14 @@ public class LoginServlet extends HttpServlet{
 	
 	
 	public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
-		
 		String userInput = req.getParameter("password");
 		HttpSession session = req.getSession();
 		if(userInput.equals(passcode) && userInput != null) {
 			session.setAttribute("isStaff", true);
-			//System.out.println(session.getAttribute("isStaff"));
 			res.sendRedirect("./products");
 		}else {
-			//System.out.println("sad");
 			session.setAttribute("isStaff", false);
+			req.setAttribute("message", "Incorrect Passcode");
 			res.sendRedirect("./login");
 		}
 	}

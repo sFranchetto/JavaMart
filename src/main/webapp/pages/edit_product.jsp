@@ -15,8 +15,7 @@
     }
 </style>
 </head>
-<body>
-	<body>
+<body style="background-color: #dbc1ac;">
 	<%@ include file="../common/navbar.jsp" %>
 	
 	<% String slug = (String) request.getAttribute("slug"); %>
@@ -26,21 +25,21 @@
 	    <form action="/JavaMart/products/<%= newSlug %>" method="post">
 	        <% Product product = Product.GetProductBySlug(slug); %>
 	        <% Product productNew = Product.GetProduct(product.getSKU()); %>
-	        <p><strong>Editing: <%= productNew.getName() %></strong> <%= product.getName() %> </p>
-	        <label for="name">Product Name:</label><br>
+	        <p><strong>Editing: <%= productNew.getName() %></strong></p>
+	        <strong><label for="name">Product Name:</label></strong><br>
 	        <input type="text" id="name" value=<%= product.getName() %> name="newName"><br>
-	        <label for="name">Product Desc:</label><br>
+	        <strong><label for="name">Product Desc:</label></strong><br>
 	        <textarea id="name" name="newDesc"><%= product.getDescription() %></textarea><br>
-	        <label for="name">Product Vendor:</label><br>
+	        <strong><label for="name">Product Vendor:</label></strong><br>
 	        <input type="text" id="name" value=<%= product.getVendor() %> name="newVendor"><br>
-	        <label for="name">Product Slugs:</label><br>
+	        <strong><label for="name">Product Slugs:</label></strong><br>
 	        <input type="text" id="name" value=<%= newSlug %> name="newSlug"><br>
-	        <label for="name">Product Price:</label><br>
+	        <strong><label for="name">Product Price:</label></strong><br>
 	        <input type="text" id="name" value=<%= product.getPrice() %> name="newPrice"><br>
-	        <label for="name">Product SKU:</label><br>
+	        <strong><label for="name">Product SKU:</label></strong><br>
 	        <input type="text" id="name" value=<%= product.getSKU() %> name="newSKU"><br>
-	        <!-- Add other product fields as needed -->
-	        <button type="submit">Modify Product</button>
+	        <br/>
+	        <button type="submit" class="btn btn-secondary">Modify Product</button>
 	    </form>
 	</div>
 </body>

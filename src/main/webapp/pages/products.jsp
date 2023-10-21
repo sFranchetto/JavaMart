@@ -18,7 +18,7 @@
         }
     </style>
  </head>
-<body>
+<body style="background-color: #dbc1ac;">
 	<%@ include file="../common/navbar.jsp" %>
 	<% if(staff == null || staff.equals(false)){ %>
 		<%} else {%>
@@ -40,20 +40,25 @@
 		    <% } %>
 		        <div class="col-md-4">
 		            <div class="card mb-4">
-		                <div class="card-body">
+		                <div class="card-body" style ="border: 1px solid #000000; background-color: #ECE0D1; border-radius: 5px;">
 		                    <strong><%= product.getName() %></strong><br/>
 		                    <%= product.getDescription() %><br/>
-		                    Price: <%= product.getPrice() %><br/>
-		                    <% if(staff == null || staff.equals(false)){ %>
-		                    	<form action="./cart/products/<%= product.getUrlSlug() %>" method="post">
-				                    <button type="submit" class="btn btn-primary">Add to Cart</button>
-				                 </form>
-							<%} else {%>	
-			                    
-			                 <% } %>
-		                    <a href="./products/<%= product.getUrlSlug() %>">
-		                    	<button type="button" class="btn btn-primary">Details</button>
-		                    </a>
+		                    Price: $<%= product.getPrice() %><br/>
+		                   
+		                    <div>
+							    <div style="display: inline-block;">
+							        <% if (staff == null || staff.equals(false)) { %>
+							            <form action="./cart/products/<%= product.getUrlSlug() %>" method="post">
+							                <button type="submit" class="btn btn-primary">Add to Cart</button>
+							            </form>
+							        <% } %>
+							    </div>
+							    <div style="display: inline-block;">
+							        <a href="./products/<%= product.getUrlSlug() %>">
+							            <button type="button" class="btn btn-info">Details</button>
+							        </a>
+							    </div>
+							</div>
 		                </div>
 		            </div>
 		     	</div>

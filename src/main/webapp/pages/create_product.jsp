@@ -18,7 +18,7 @@
         }
     </style>
  </head>
-<body>
+<body style="background-color: #dbc1ac;">
 	<%@ include file="../common/navbar.jsp" %>
 	<div class="container mt-5">
     <h2>Create Product</h2>
