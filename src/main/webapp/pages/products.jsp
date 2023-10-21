@@ -44,9 +44,13 @@
 		                    <strong><%= product.getName() %></strong><br/>
 		                    <%= product.getDescription() %><br/>
 		                    Price: <%= product.getPrice() %><br/>
-		                    <form action="./cart/products/<%= product.getUrlSlug() %>" method="post">
-			                    <button type="submit" class="btn btn-primary">Add to Cart</button>
-			                 </form>
+		                    <% if(staff == null || staff.equals(false)){ %>
+		                    	<form action="./cart/products/<%= product.getUrlSlug() %>" method="post">
+				                    <button type="submit" class="btn btn-primary">Add to Cart</button>
+				                 </form>
+							<%} else {%>	
+			                    
+			                 <% } %>
 		                    <a href="./products/<%= product.getUrlSlug() %>">
 		                    	<button type="button" class="btn btn-primary">Details</button>
 		                    </a>

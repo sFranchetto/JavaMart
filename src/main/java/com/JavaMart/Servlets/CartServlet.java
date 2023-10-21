@@ -1,5 +1,6 @@
 package com.JavaMart.Servlets;
 
+import com.JavaMart.OperationNotAllowedException;
 import com.JavaMart.Classes.*;
 import com.JavaMart.Classes.User.Customer;
 import com.JavaMart.Classes.User.Staff;
@@ -13,23 +14,40 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+
+
 @WebServlet("/cart")
 public class CartServlet extends HttpServlet {
 	
+	String user;
+	
 	public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
+		HttpSession session = req.getSession();
+		user = CheckSession(session);
 		
-		String user = Customer.getUser();
+		if (user.equals("staff")) {
+			try {
+				throw new OperationNotAllowedException("Staff members are not allowed to access the cart.");
+			}catch (OperationNotAllowedException e) {
+                req.setAttribute("e", e);
+                req.getRequestDispatcher("/common/error_page.jsp").forward(req, res);
+            }
+		}else {
 		
-		List<Product> cart = Cart.getCart(user);
-		
-		System.out.println("============");
-		System.out.println(cart.getClass());
-		System.out.println(cart.size());
-		Cart.showCart();
-		
-		req.setAttribute("cart", cart);
-		req.getRequestDispatcher("/pages/user_cart.jsp").forward(req, res);
+			List<Product> cart = Cart.getCart(user);
+			req.setAttribute("cart", cart);
+			req.getRequestDispatcher("/pages/user_cart.jsp").forward(req, res);
+		}
 	}
 	
 	public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {}
+	
+	
+	private String CheckSession(HttpSession session) {
+		if(session.getAttribute("isStaff") == null) {
+			return "TempUser";
+		}else {
+			return "staff";
+		}
+	}
 }
