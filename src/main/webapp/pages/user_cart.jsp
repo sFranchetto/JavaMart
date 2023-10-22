@@ -8,12 +8,10 @@
 <html>
 <head>
 <meta charset="ISO-8859-1">
-<title>Insert title here</title>
+<title>JavaMart</title>
 <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bootstrap Cart Template</title>
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
 </head>
 <body style="background-color: #dbc1ac;">
@@ -34,7 +32,6 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- Use JSP code to dynamically generate the table rows here -->
                     <%
                     ArrayList<Product> cart = (ArrayList<Product>) request.getAttribute("cart");
                     if (cart != null && !cart.isEmpty()) {

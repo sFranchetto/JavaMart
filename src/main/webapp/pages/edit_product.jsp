@@ -7,7 +7,7 @@
 <html>
 <head>
 <meta charset="ISO-8859-1">
-<title>Insert title here</title>
+<title>JavaMart</title>
 <style>
     input, textarea {
         color: grey;
