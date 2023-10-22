@@ -16,20 +16,21 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
 </head>
-<body>
+<body style="background-color: #dbc1ac;">
 <%@ include file="../common/navbar.jsp" %>
-    <div class="container mt-5">
-    <div class="card">
+    <div class="container mt-5" >
+    <a href="./products">Back to catalog</a>
+    <div class="card" style="background-color: #ECE0D1;">
         <div class="card-header">
             <h3>Your Cart</h3>
         </div>
-        <div class="card-body">
-            <table class="table">
-                <thead>
+        <div class="card-body" style="background-color: #ECE0D1;">
+            <table class="table" style="background-color: #ECE0D1;">
+                <thead >
                     <tr>
-                        <th scope="col"> </th>
-                        <th scope="col">Price</th>
-                        <th scope="col"> </th>
+                        <th scope="col" style="background-color: #ECE0D1;border-bottom: 1px solid #000000;"> </th >
+                        <th scope="col" style="background-color: #ECE0D1;border-bottom: 1px solid #000000;">Price</th>
+                        <th scope="col" style="background-color: #ECE0D1;border-bottom: 1px solid #000000;"> </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -39,12 +40,13 @@
                     if (cart != null && !cart.isEmpty()) {
                         for (Product product : cart) {
                     %>
-                    <tr>
-                        <td><h5><strong><%= product.getName() %></strong></h5>
+                    <tr style="border-bottom: 1px solid #000000;">
+                        
+                        <td style="background-color: #ECE0D1;"><h5><strong><%= product.getName() %></strong></h5>
                         <%= product.getDescription() %>
                         </td>
-                        <td><%= product.getPrice() %></td>
-                        <td>
+                        <td style="background-color: #ECE0D1;">$<%= product.getPrice() %></td>
+                        <td style="background-color: #ECE0D1;">
                         	<form action="./cart/products/<%= product.getUrlSlug() %>" method="post">
 							    <input type="hidden" name="_method" value="delete">
 							    <button type="submit" class="btn btn-danger">Remove</button>
@@ -56,14 +58,22 @@
                     } else {
                     %>
                     <tr>
-                        <td colspan="3">Cart is empty</td>
+                        <td colspan="3" style="background-color: #ECE0D1;">Cart is empty</td>
                     </tr>
                     <% } %>
                 </tbody>
             </table>
         </div>
         <div class="card-footer text-muted">
-            Total: $100
+            <%
+				double total = 0;
+				if (cart != null && !cart.isEmpty()) {
+				    for (Product product : cart) {
+				        total += product.getPrice();
+				    }
+				}
+			%>
+            Total: $<%= String.format("%.2f", total) %>
         </div>
     </div>
 </div>
