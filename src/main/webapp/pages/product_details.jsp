@@ -7,7 +7,7 @@
 <html>
 <head>
 <meta charset="ISO-8859-1">
-<title>Insert title here</title>
+<title>JavaMart</title>
 </head>
 <body style="background-color: #dbc1ac;">
 <%@ include file="../common/navbar.jsp" %>
