@@ -1,6 +1,7 @@
 package com.JavaMart.Servlets;
 
 import com.JavaMart.*;
+import java.io.PrintWriter;
 import com.JavaMart.Classes.*;
 import com.JavaMart.Classes.User.Customer;
 
@@ -12,11 +13,18 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.sql.Connection;
+import java.sql.SQLException;
+
 
 @WebServlet("/products")
 public class ProductServlet extends HttpServlet{
 	
 	public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
+		
+
+		DatabaseManager.RunDB();
+
 		
 		List<Product> products = ProductFactory.returnAllProducts();
 
