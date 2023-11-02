@@ -1,6 +1,10 @@
 package com.JavaMart.Classes;
+import java.sql.Connection;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.JavaMart.DatabaseManager;
 
 public class Order {
 	String user;
@@ -42,13 +46,13 @@ public class Order {
 	
 	public List<Order> orders;
 	
-	public void CreateOrders() {
-		this.orders = new ArrayList<>();
+	public static void CreateOrder(String user, String shipping_address) {
+		Connection con = DatabaseManager.RunDB();
+		String stmt = "INSERT INTO Orders (user_id, shipping_address) VALUES('"+user+"','"+shipping_address+"')";
+		DatabaseManager.insertStatement(stmt, con);
+		Cart.ClearCart(user);
 	}
 	
-	public void addOrder(Order order) {
-		orders.add(order);
-	}
 	
 	public List<Order> getOrders(String user){
 		List<Order> orders = new ArrayList<>();

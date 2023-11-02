@@ -11,14 +11,14 @@ import com.JavaMart.DatabaseManager;
 public class Cart {
 	
 	public static List<Product> cart;
-
+	static Connection con = DatabaseManager.RunDB();
+	
     public Cart() {
         Cart.cart = new ArrayList<>();
     }
 	
 	public static List<Product> getCart(String user) throws SQLException {
 		System.out.println(user);
-		Connection con = DatabaseManager.RunDB();
 		String stmt = "SELECT sku, quantity FROM cart WHERE user_id = '" + user + "'";
 		ResultSet rs = DatabaseManager.getStatement(stmt, con);
 		
@@ -47,7 +47,7 @@ public class Cart {
 			
 	public void RemoveProductFromCart(String user, String sku) {
 		Product product = Product.GetProduct(sku);
-		Connection con = DatabaseManager.RunDB();
+		
 		String stmt = "DELETE FROM cart WHERE user_id='" + user + "' AND sku='" + product.getSKU() + "'";
 		DatabaseManager.insertStatement(stmt, con);
 		
@@ -69,5 +69,10 @@ public class Cart {
 	        }
 	    }
 	    return quantity;
+	}
+	
+	public static void ClearCart(String user) {
+		String statement = "DELETE FROM cart WHERE user_id = '" + user +"'";
+		DatabaseManager.insertStatement(statement, con);
 	}
 }

@@ -27,7 +27,7 @@ public class CartServlet extends HttpServlet {
 		//user = CheckSession(session);
 		String passcode = (String) session.getAttribute("passcode");
 		
-		if (passcode == null) {
+		if (passcode == null && session.getAttribute("isStaff") != null) {
 			try {
 				throw new OperationNotAllowedException("Staff members are not allowed to access the cart.");
 			}catch (OperationNotAllowedException e) {

@@ -23,10 +23,16 @@ public class OrderMadeServlet extends HttpServlet{
 	
 	
 	public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
-		System.out.println("jhsadfhjk");
+		req.getRequestDispatcher("/pages/create_order.jsp").forward(req, res);
 	}
 	
 	public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
-		System.out.println("jhsadfhjk");
+		HttpSession session = req.getSession();
+		String ship_address = req.getParameter("shippingAddress");
+		String user_id = (String) session.getAttribute("passcode");
+
+		Order.CreateOrder(user_id,ship_address);
+		
+		res.sendRedirect("/JavaMart/pages/order_created.jsp");
 	}
 }
