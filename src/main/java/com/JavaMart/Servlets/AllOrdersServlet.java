@@ -1,43 +1,34 @@
 package com.JavaMart.Servlets;
 
 import com.JavaMart.*;
-import java.io.PrintWriter;
-import com.JavaMart.Classes.*;
-import com.JavaMart.Classes.User.Customer;
+import com.JavaMart.Classes.Order;
+import com.JavaMart.Classes.Product;
 
-import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.sql.Connection;
-import java.sql.SQLException;
 
-
-@WebServlet("/order_made")
-public class OrderMadeServlet extends HttpServlet{
-	
-	
+@WebServlet("/orders")
+public class AllOrdersServlet extends HttpServlet{
 	public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
-		req.getRequestDispatcher("/pages/create_order.jsp").forward(req, res);
-	}
-	
-	public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
 		HttpSession session = req.getSession();
-		String ship_address = req.getParameter("shippingAddress");
 		String user_id = (String) session.getAttribute("passcode");
-
+		List<Order> orders = null;
+		
 		try {
-			Order.CreateOrder(user_id,ship_address);
+			orders = Order.getOrders(user_id);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		res.sendRedirect("/JavaMart/pages/order_created.jsp");
+		req.setAttribute("orders", orders);
+		req.getRequestDispatcher("/pages/view_orders.jsp").forward(req, res);
 	}
 }

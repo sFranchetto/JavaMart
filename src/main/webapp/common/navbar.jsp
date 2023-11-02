@@ -14,6 +14,9 @@
 </style>
 </head>
 <body>
+<%Object staff = session.getAttribute("isStaff"); %>
+<%Object customer = session.getAttribute("isCustomer"); %>
+<%Object passcode = session.getAttribute("passcode"); %>
 <nav class="navbar navbar-expand-lg bg-brown">
   <div class="container-fluid">
     <a class="navbar-brand" href="/JavaMart">JavaMart</a>
@@ -23,12 +26,15 @@
         <li class="nav-item">
           <a class="nav-link active" aria-current="page" href="/JavaMart/products">Catalog</a>
         </li>
+        <% if(passcode != null){%>
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/JavaMart/orders">My Orders</a>
+        </li>
+        <%} %>
       </ul>
     </div>
   <div class ="ml-auto">
-  		<%Object staff = session.getAttribute("isStaff"); %>
-  		<%Object customer = session.getAttribute("isCustomer"); %>
-  		<%Object passcode = session.getAttribute("passcode"); %>
+  		
   		<% if(staff == null || staff.equals(false)){ %>
 		<%} else {%>
 			<a class="nav-link pe-3" href="./create_product">

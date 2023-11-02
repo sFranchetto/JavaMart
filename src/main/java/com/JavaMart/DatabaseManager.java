@@ -22,17 +22,26 @@ public class DatabaseManager {
 		return connection;
 	}
 	
-	public static void insertStatement(String statement, Connection con) {
-		System.out.println(statement);
-		Statement stmt;
-		try {
-			stmt = con.createStatement();
-			String sql = statement;
-			stmt.executeUpdate(sql);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public static int insertStatement(String statement, Connection con) {
+	    System.out.println(statement);
+	    Statement stmt;
+	    try {
+	        stmt = con.createStatement();
+	        String sql = statement;
+	        stmt.executeUpdate(sql);
+
+	        ResultSet rs = stmt.executeQuery("SELECT LAST_INSERT_ID()");
+	        int last_inserted_id = 0;
+	        if (rs.next()) {
+	            last_inserted_id = rs.getInt(1);
+	        }
+	        rs.close();
+
+	        return last_inserted_id;
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return 0;
 	}
 	
 	public static ResultSet getStatement(String statement, Connection con) {
