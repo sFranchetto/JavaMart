@@ -20,6 +20,16 @@ public class AllOrdersServlet extends HttpServlet{
 	public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
 		HttpSession session = req.getSession();
 		String user_id = (String) session.getAttribute("passcode");
+		String method = req.getParameter("method");
+		
+		
+		
+		
+		
+		if("staff_orders".equals(method)) {
+			System.out.println("woohooo<");
+		}
+		
 		List<Order> orders = null;
 		
 		try {

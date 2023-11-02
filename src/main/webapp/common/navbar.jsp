@@ -30,6 +30,9 @@
         <li class="nav-item">
           <a class="nav-link active" aria-current="page" href="/JavaMart/orders">My Orders</a>
         </li>
+        <%}else if(staff != null){ %>
+         <a class="nav-link active" aria-current="page" href="/JavaMart/orders?method=staff_orders">View Orders</a>
+         
         <%} %>
       </ul>
     </div>

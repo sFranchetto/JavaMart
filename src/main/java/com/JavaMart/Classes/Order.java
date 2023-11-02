@@ -93,14 +93,19 @@ public class Order {
 		return order;
 	}
 	
-	public Order getOrder(String user, int id) {
-		for (Order order : orders) {
-			if (order.getId() == id) {
-				return order; 
-			}else {
-				System.out.println("User doesn't have this order!");
-			}
-		}return null;
+	public static List<OrderDetail> getOrder(String user, int id) throws SQLException {
+		String stmt = "SELECT * FROM orderdetails WHERE order_id = " + id;
+		ResultSet rs = DatabaseManager.getStatement(stmt, con);
+		OrderDetail.orderDetail = new ArrayList<>();
+		while(rs.next()) {
+			int order_id = rs.getInt("order_id");
+			String product_id = rs.getString("product_id");
+			int quantity = rs.getInt("quantity");
+			OrderDetail od = new OrderDetail(order_id, product_id, quantity);
+			OrderDetail.orderDetail.add(od);
+		}
+		return OrderDetail.orderDetail;
 	}
 	
 }
+

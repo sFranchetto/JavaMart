@@ -67,8 +67,7 @@
                         <td style="background-color: #ECE0D1;"><%= trackingNumber %></td>
                         <td style="background-color: #ECE0D1;"><%= isShipped %></td>
                         <td style="background-color: #ECE0D1;">
-                        	<form action="./cart/products/ %>" method="post">
-							    <input type="hidden" name="_method" value="delete">
+                        	<form action="./orders/<%=order.getId() %>" method="get">
 							    <button type="submit" class="btn btn-primary">Details</button>
 							</form>
                         </td>
