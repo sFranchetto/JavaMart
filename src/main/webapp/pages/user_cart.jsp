@@ -12,7 +12,21 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<script>
+			function incrementQuantity(sku) {
+				var quantityElement = document.getElementById("quantity-" + sku);
+				var currentQuantity = parseInt(quantityElement.textContent);
+				quantityElement.textContent = currentQuantity + 1;
+			}
 
+			function decrementQuantity(sku) {
+				var quantityElement = document.getElementById("quantity-" + sku);
+				var currentQuantity = parseInt(quantityElement.textContent);
+				if (currentQuantity > 0) {
+					quantityElement.textContent = currentQuantity - 1;
+				}
+			}
+			</script>
 </head>
 <body style="background-color: #dbc1ac;">
 <%@ include file="../common/navbar.jsp" %>
@@ -34,6 +48,7 @@
                 </thead>
                 <tbody>
                     <%
+                    int quantity = 1;
                     ArrayList<Product> cart = (ArrayList<Product>) request.getAttribute("cart");
                     if (cart != null && !cart.isEmpty()) {
                         for (Product product : cart) {
@@ -45,7 +60,17 @@
                         </td>
                         <td style="background-color: #ECE0D1;">$<%= product.getPrice() %></td>
                         <td style="background-color: #ECE0D1;">
-                        	<p>Quantity here</p>
+                        
+                        <div class="input-group">
+						    <div class="input-group-prepend">
+						        <button type="button" class="btn btn-sm btn-danger" onclick="decrementQuantity('<%= product.getSKU() %>')">-</button>
+						    </div>
+						    <p id="quantity-<%= product.getSKU() %>" class="form-control text-center" style="width: 40px;"><%= quantity %></p>
+						    <div class="input-group-append">
+						        <button type="button" class="btn btn-sm btn-danger" onclick="incrementQuantity('<%= product.getSKU() %>')">+</button>
+						    </div>
+						</div>
+						
                         </td>
                         <td style="background-color: #ECE0D1;">
                         	<form action="./cart/products/<%= product.getUrlSlug() %>" method="post">
@@ -66,6 +91,7 @@
             </table>
         </div>
         <div class="card-footer text-muted d-flex justify-content-between align-items-center">
+        
             <%
 				double total = 0;
 				if (cart != null && !cart.isEmpty()) {
@@ -75,9 +101,21 @@
 				}
 			%>
             Total: $<%= String.format("%.2f", total) %>
-            <button class="btn btn-primary">
-  				Place Order
-  			</button>
+            <% if(customer == null) { %>
+	        <p> You are not logged in, please do so to finalize order </p>
+	        
+	        <form action="./login" method="get"> 
+		            <button class="btn btn-primary">
+		  				Place Order
+					</button>
+	  		</form>
+	  		<%} else { %> 
+	  			<form action="./order_made" method="get"> 
+		            <button class="btn btn-primary">
+		  				Place Order
+					</button>
+	  		</form>
+	  		<% } %>
         </div>
     </div>
 </div>

@@ -14,6 +14,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.sql.*;
+
+import com.JavaMart.DatabaseManager;
 
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet{
@@ -36,6 +39,12 @@ public class LoginServlet extends HttpServlet{
 					bufferedWriter.close();
 					session.setAttribute("isCustomer", true);
 					session.setAttribute("passcode", userInputForUser);
+					Connection con = DatabaseManager.RunDB();
+					ResultSet rs = DatabaseManager.getStatement("SELECT * FROM USER WHERE ID = '" + userInputForUser+"'", con);
+					if(rs == null) {
+						DatabaseManager.insertStatement("INSERT INTO user (id)"
+							+ "	VALUES ('" + userInputForUser + "')", con);
+					}
 					res.sendRedirect("./products");
 				}
 	        } catch (IOException e) {

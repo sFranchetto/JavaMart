@@ -53,12 +53,15 @@
 			 </a>
 			 </form>
 	  	<%} else { %>
-	  		<form action="logout" method="post">
-			<a class="nav-link pe-3" href="/JavaMart/logout">
-				You are currently logged in as Customer with passcode <strong><%= passcode %>. </strong> 
-			  	<button type="submit" class="btn btn-danger"> Log out</button>
-			 </a>
-			 </form>
+	  		<form action="logout" method="post" class="d-flex align-items-center">
+			    <a class="nav-link pe-3" href="/JavaMart/cart">
+			        <button type="button" class="btn btn-warning me-3"> My Cart </button>
+			    </a>
+			    <a class="nav-link pe-3" href="/JavaMart/logout">
+			        You are currently logged in as Customer with passcode <strong><%= passcode %>. </strong>
+			        <button type="submit" class="btn btn-danger"> Log out</button>
+			    </a>
+			</form>
 	  	<%}%>
   </div>
 </div>

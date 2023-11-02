@@ -25,7 +25,9 @@ public class ModifyCartServlet extends HttpServlet {
 		String method = req.getParameter("_method");
 	    if ("delete".equals(method)) {
 	        doDelete(req, res);
-	    } else {
+	    } else if ("changeQuantity".equals(method)){
+	    	doPatch(req, res);	    	
+	    }else {
 
 			String slug = req.getPathInfo();
 			String user = Customer.getUser();	
@@ -60,8 +62,16 @@ public class ModifyCartServlet extends HttpServlet {
 		String user = Customer.getUser();	
 		
 		Product product = Product.GetProductBySlug(slug);
-		
 		cart.RemoveProductFromCart(user, product.getSKU());
+		
+		res.sendRedirect("/JavaMart/cart");
+	}
+	
+	public void doPatch(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
+		String slug = req.getPathInfo();
+		String user = Customer.getUser();	
+		
+		Product product = Product.GetProductBySlug(slug);
 		
 		res.sendRedirect("/JavaMart/cart");
 	}

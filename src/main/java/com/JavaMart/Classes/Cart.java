@@ -24,4 +24,20 @@ public class Cart {
 		Product product = Product.GetProduct(sku);
 		cart.remove(product);
 	}
+	
+	public void SetProductQuantityInCart(String user, String sku, int quantity) {
+		if(quantity <= 0) {
+			System.out.println("Add more!");
+		}
+	}
+	
+	public int getProductQuantityInCart(String user, String sku) {
+	    int quantity = 0;
+	    for (Product product : cart) {
+	        if (product.getSKU().equals(sku)) {
+	            quantity++;
+	        }
+	    }
+	    return quantity;
+	}
 }
