@@ -106,13 +106,13 @@
 	        
 	        <form action="./login" method="get"> 
 		            <button class="btn btn-primary">
-		  				Place Order
+		  				Continue to Checkout
 					</button>
 	  		</form>
 	  		<%} else { %> 
 	  			<form action="./order_made" method="get"> 
 		            <button class="btn btn-primary">
-		  				Place Order
+		  				Continue to Checkout
 					</button>
 	  		</form>
 	  		<% } %>

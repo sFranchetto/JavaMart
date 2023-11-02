@@ -1,11 +1,13 @@
 package com.JavaMart.Servlets;
 
+import com.JavaMart.DatabaseManager;
 import com.JavaMart.OperationNotAllowedException;
 import com.JavaMart.Classes.*;
 import com.JavaMart.Classes.User.Customer;
 import com.JavaMart.Classes.User.Staff;
 
 import java.io.IOException;
+import java.sql.Connection;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -21,8 +23,10 @@ public class ModifyCartServlet extends HttpServlet {
 	String user;
 	
 	public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
-		
+		HttpSession session = req.getSession();
+		String passcode = (String) session.getAttribute("passcode");
 		String method = req.getParameter("_method");
+		
 	    if ("delete".equals(method)) {
 	        doDelete(req, res);
 	    } else if ("changeQuantity".equals(method)){
@@ -34,7 +38,11 @@ public class ModifyCartServlet extends HttpServlet {
 			
 			Product product = Product.GetProductBySlug(slug);
 			
-			cart.AddProductToCart(user, product.getSKU());
+			
+			InsertDBStuff(passcode, product.getSKU());
+			
+			
+			Cart.AddProductToCart(user, product.getSKU());
 			
 			res.sendRedirect("/JavaMart/cart");
 	    }
@@ -57,12 +65,13 @@ public class ModifyCartServlet extends HttpServlet {
 	
 	public void doDelete(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
 
-		
+		HttpSession session = req.getSession();
+		String passcode = (String) session.getAttribute("passcode");
 		String slug = req.getPathInfo();
-		String user = Customer.getUser();	
+			
 		
 		Product product = Product.GetProductBySlug(slug);
-		cart.RemoveProductFromCart(user, product.getSKU());
+		cart.RemoveProductFromCart(passcode, product.getSKU());
 		
 		res.sendRedirect("/JavaMart/cart");
 	}
@@ -83,6 +92,12 @@ public class ModifyCartServlet extends HttpServlet {
 		}else {
 			return "staff";
 		}
+	}
+	
+	private void InsertDBStuff(String user_id, String sku) {
+		Connection con = DatabaseManager.RunDB();
+		DatabaseManager.insertStatement("INSERT INTO cart (user_id, sku, quantity)"
+				+ "	VALUES ('" + user_id + "', '" + sku +"', '"+ 1 + "' )", con);
 	}
 
 }

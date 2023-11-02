@@ -1,7 +1,12 @@
 package com.JavaMart.Classes;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.JavaMart.DatabaseManager;
 
 public class Cart {
 	
@@ -11,17 +16,42 @@ public class Cart {
         Cart.cart = new ArrayList<>();
     }
 	
-	public static List<Product> getCart(String user) {
+	public static List<Product> getCart(String user) throws SQLException {
+		System.out.println(user);
+		Connection con = DatabaseManager.RunDB();
+		String stmt = "SELECT sku, quantity FROM cart WHERE user_id = '" + user + "'";
+		ResultSet rs = DatabaseManager.getStatement(stmt, con);
+		
+		
+		if (rs == null) {
+            cart = new ArrayList<>();
+        }else {
+        	while(rs.next()) {
+				String sku = rs.getString("sku");
+				System.out.println(sku);
+				AddProductToCart(user, sku);//rs.getString("sku"));
+			}
+        }
 		return cart;
 	}
 	
-	public void AddProductToCart(String user, String sku) {
-		Product product = Product.GetProduct(sku);
-		cart.add(product);
+	public static void AddProductToCart(String user, String sku) {
+		if (cart == null) {
+	        cart = new ArrayList<>();
+	    }
+	    Product product = Product.GetProduct(sku);
+	    if (!cart.contains(product)) {
+	        cart.add(product);
+	    }
 	}
 			
 	public void RemoveProductFromCart(String user, String sku) {
 		Product product = Product.GetProduct(sku);
+		Connection con = DatabaseManager.RunDB();
+		String stmt = "DELETE FROM cart WHERE user_id='" + user + "' AND sku='" + product.getSKU() + "'";
+		DatabaseManager.insertStatement(stmt, con);
+		
+		System.out.println(cart.size());
 		cart.remove(product);
 	}
 	

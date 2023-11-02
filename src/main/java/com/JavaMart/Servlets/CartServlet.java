@@ -6,6 +6,7 @@ import com.JavaMart.Classes.User.Customer;
 import com.JavaMart.Classes.User.Staff;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -23,9 +24,10 @@ public class CartServlet extends HttpServlet {
 	
 	public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
 		HttpSession session = req.getSession();
-		user = CheckSession(session);
+		//user = CheckSession(session);
+		String passcode = (String) session.getAttribute("passcode");
 		
-		if (user.equals("staff")) {
+		if (passcode == null) {
 			try {
 				throw new OperationNotAllowedException("Staff members are not allowed to access the cart.");
 			}catch (OperationNotAllowedException e) {
@@ -34,7 +36,13 @@ public class CartServlet extends HttpServlet {
             }
 		}else {
 		
-			List<Product> cart = Cart.getCart(user);
+			List<Product> cart = null;
+			try {
+				cart = Cart.getCart(passcode);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			req.setAttribute("cart", cart);
 			req.getRequestDispatcher("/pages/user_cart.jsp").forward(req, res);
 		}
