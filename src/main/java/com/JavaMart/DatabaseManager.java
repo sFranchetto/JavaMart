@@ -18,9 +18,9 @@ public class DatabaseManager {
             String password = "abc123";
             connection = DriverManager.getConnection(jdbcUrl, username, password);
             
-            Statement stmt = connection.createStatement();
-            String sql = "INSERT INTO frui values(44, 'blueberry')";
-            stmt.executeUpdate(sql);
+//            Statement stmt = connection.createStatement();
+//            String sql = "INSERT INTO frui values(44, 'blueberry')";
+//            stmt.executeUpdate(sql);
 		}catch(Exception e) {
 			System.out.println(e);
 		}

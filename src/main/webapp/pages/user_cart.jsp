@@ -28,6 +28,7 @@
                     <tr>
                         <th scope="col" style="background-color: #ECE0D1;border-bottom: 1px solid #000000;"> </th >
                         <th scope="col" style="background-color: #ECE0D1;border-bottom: 1px solid #000000;">Price</th>
+                        <th scope="col" style="background-color: #ECE0D1;border-bottom: 1px solid #000000;">Quantity </th>
                         <th scope="col" style="background-color: #ECE0D1;border-bottom: 1px solid #000000;"> </th>
                     </tr>
                 </thead>
@@ -43,6 +44,9 @@
                         <%= product.getDescription() %>
                         </td>
                         <td style="background-color: #ECE0D1;">$<%= product.getPrice() %></td>
+                        <td style="background-color: #ECE0D1;">
+                        	<p>Quantity here</p>
+                        </td>
                         <td style="background-color: #ECE0D1;">
                         	<form action="./cart/products/<%= product.getUrlSlug() %>" method="post">
 							    <input type="hidden" name="_method" value="delete">
@@ -61,7 +65,7 @@
                 </tbody>
             </table>
         </div>
-        <div class="card-footer text-muted">
+        <div class="card-footer text-muted d-flex justify-content-between align-items-center">
             <%
 				double total = 0;
 				if (cart != null && !cart.isEmpty()) {
@@ -71,6 +75,9 @@
 				}
 			%>
             Total: $<%= String.format("%.2f", total) %>
+            <button class="btn btn-primary">
+  				Place Order
+  			</button>
         </div>
     </div>
 </div>

@@ -1,5 +1,11 @@
 package com.JavaMart.Servlets;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.PrintWriter;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.io.IOException;
 import java.util.List;
 import javax.servlet.ServletException;
@@ -13,24 +19,47 @@ import javax.servlet.http.HttpSession;
 public class LoginServlet extends HttpServlet{
 	
 	private final String passcode = "secret";
-	
+	String path = "/UserPasscodes.txt";
 	
 	public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
-		String userInput = req.getParameter("password");
+		String userInputForStaff = req.getParameter("staffPassword");
+		String userInputForUser = req.getParameter("userPassword");
+		res.setContentType("text/html");
 		HttpSession session = req.getSession();
-		if(userInput.equals(passcode) && userInput != null) {
-			session.setAttribute("isStaff", true);
-			res.sendRedirect("./products");
-		}else {
-			session.setAttribute("isStaff", false);
-			req.setAttribute("message", "Incorrect Passcode");
-			res.sendRedirect("./login");
+		
+		if(userInputForStaff == null) {
+			try {
+				if(userInputForUser != null) {
+					FileWriter out = new FileWriter(getPath() + path);
+					BufferedWriter bufferedWriter = new BufferedWriter(out);
+					bufferedWriter.write(userInputForUser);
+					bufferedWriter.close();
+					session.setAttribute("isCustomer", true);
+					session.setAttribute("passcode", userInputForUser);
+					res.sendRedirect("./products");
+				}
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	        }
+		} else {
+			if(userInputForStaff.equals(passcode) && userInputForStaff != null) {
+				session.setAttribute("isStaff", true);
+				res.sendRedirect("./products");
+			}else {
+				session.setAttribute("isStaff", false);
+				req.setAttribute("message", "Incorrect Passcode");
+				res.sendRedirect("./login");
+			}
 		}
 	}
 	
 	public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
-		
-
+			
 		req.getRequestDispatcher("/pages/login.jsp").forward(req, res);
+	}
+	
+	private String getPath() {
+		String apath = "C:/Users/Steven/Desktop/Fall 2023/SOEN 387/ProjectFolder/JavaMart/src/main/webapp/resources/";
+		return apath;
 	}
 }

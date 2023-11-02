@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 import com.JavaMart.Classes.*;
 import com.JavaMart.Classes.User.Customer;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import javax.servlet.ServletException;
@@ -22,7 +23,10 @@ public class ProductServlet extends HttpServlet{
 	
 	public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
 		
-
+		
+		
+		//System.out.println(tempFile.exists());
+		
 		DatabaseManager.RunDB();
 
 		
