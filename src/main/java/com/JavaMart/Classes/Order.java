@@ -81,12 +81,18 @@ public class Order {
 		if (rs == null) {
             order = new ArrayList<>();
         }else {
+        	int order_id = rs.getInt("order_id");
+			String user_id = rs.getString("user_id");
+			String shipping_address = rs.getString("shipping_address");
+			String tracking_num = rs.getString("tracking_number");
+			Order orderDetail = new Order(user_id, order_id, shipping_address, false, tracking_num);
+			order.add(orderDetail);
         	while(rs.next()) {
-				int order_id = rs.getInt("order_id");
-				String user_id = rs.getString("user_id");
-				String shipping_address = rs.getString("shipping_address");
-				String tracking_num = rs.getString("tracking_number");
-				Order orderDetail = new Order(user_id, order_id, shipping_address, false, tracking_num);
+				order_id = rs.getInt("order_id");
+				user_id = rs.getString("user_id");
+				shipping_address = rs.getString("shipping_address");
+				tracking_num = rs.getString("tracking_number");
+				orderDetail = new Order(user_id, order_id, shipping_address, false, tracking_num);
 				order.add(orderDetail);
 			}
         }
@@ -107,5 +113,19 @@ public class Order {
 		return OrderDetail.orderDetail;
 	}
 	
+	public static List<Order> GetAllOrders() throws SQLException{
+		String stmt = "SELECT * FROM Orders";
+		ResultSet rs = DatabaseManager.getStatement(stmt, con);
+		ArrayList<Order> allOrders = new ArrayList<>();
+		while(rs.next()) {
+			String user_id = rs.getString("user_id");
+			String shipping_address = rs.getString("shipping_address");
+			String tracking_num = rs.getString("tracking_number");
+			int order_id = rs.getInt("order_id");
+			Order orderDetail = new Order(user_id, order_id, shipping_address, false, tracking_num);
+			allOrders.add(orderDetail);
+		}
+		return allOrders;
+	}
 }
 

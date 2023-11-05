@@ -17,7 +17,6 @@
 </head>
 <body style="background-color: #dbc1ac;">
 <%@ include file="../common/navbar.jsp" %>
-    
     <div class="container mt-5" >
     <a href="../orders">Back to Orders</a>
     <div class="card" style="background-color: #ECE0D1;">
@@ -55,6 +54,15 @@
         <%
             }
         %>
+        <%if(staff != null){ %>
+            <td style="background-color: #ECE0D1;">
+            	<form action="./" method="post">
+					<input type="hidden" name="_method" value="delete">
+					<button type="submit" class="btn btn-success">Ship Order</button>
+				</form>
+            </td>
+            
+        <%}%>
     </tbody>
 </table>
 
