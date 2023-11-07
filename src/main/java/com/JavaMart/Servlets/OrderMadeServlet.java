@@ -23,6 +23,7 @@ public class OrderMadeServlet extends HttpServlet{
 	
 	
 	public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
+		
 		req.getRequestDispatcher("/pages/create_order.jsp").forward(req, res);
 	}
 	

@@ -39,6 +39,8 @@ public class OrderDetail{
         this.quantity = quantity;
     }
     
+    
+    
     public String getProductName(String id) {
     	Product prod = Product.GetProduct(id);
     	String sku = prod.getName();

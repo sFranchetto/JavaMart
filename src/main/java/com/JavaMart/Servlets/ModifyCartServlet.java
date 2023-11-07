@@ -8,6 +8,7 @@ import com.JavaMart.Classes.User.Staff;
 
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -39,7 +40,12 @@ public class ModifyCartServlet extends HttpServlet {
 			Product product = Product.GetProductBySlug(slug);
 			
 			
-			InsertDBStuff(passcode, product.getSKU());
+			try {
+				InsertDBStuff(passcode, product.getSKU());
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			
 			
 			Cart.AddProductToCart(user, product.getSKU());
@@ -94,8 +100,9 @@ public class ModifyCartServlet extends HttpServlet {
 		}
 	}
 	
-	private void InsertDBStuff(String user_id, String sku) {
+	private void InsertDBStuff(String user_id, String sku) throws SQLException {
 		Connection con = DatabaseManager.RunDB();
+		
 		DatabaseManager.insertStatement("INSERT INTO cart (user_id, sku, quantity)"
 				+ "	VALUES ('" + user_id + "', '" + sku +"', '"+ 1 + "' )", con);
 	}

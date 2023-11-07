@@ -18,7 +18,7 @@
 <body style="background-color: #dbc1ac;">
 <%@ include file="../common/navbar.jsp" %>
     <div class="container mt-5" >
-    <a href="../orders">Back to Orders</a>
+    <a href="../products">Back home</a>
     <div class="card" style="background-color: #ECE0D1;">
         <div class="card-header">
             <% String slug = (String) request.getAttribute("slug");%>
@@ -56,8 +56,7 @@
         %>
         <%if(staff != null){ %>
             <td style="background-color: #ECE0D1;">
-            	<form action="./" method="post">
-					<input type="hidden" name="_method" value="delete">
+            	<form action="../order/shiporder/<%= slug %>" method="get">
 					<button type="submit" class="btn btn-success">Ship Order</button>
 				</form>
             </td>

@@ -56,9 +56,11 @@ public class Cart {
 	}
 	
 	public void SetProductQuantityInCart(String user, String sku, int quantity) {
-		if(quantity <= 0) {
-			System.out.println("Add more!");
-		}
+		if (quantity <= 0) {
+            System.out.println("Add more!");
+            return;
+        }
+
 	}
 	
 	public int getProductQuantityInCart(String user, String sku) {

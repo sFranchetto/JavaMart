@@ -13,19 +13,35 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 <script>
+			function updateTotal(sku, price) {
+			    var quantityElement = document.getElementById("quantity-" + sku);
+			    var currentQuantity = parseInt(quantityElement.textContent);
+			    var totalPriceElement = document.getElementById("total-price");
+			    var currentTotalPrice = parseFloat(totalPriceElement.textContent.substring(1));
+			    
+			    var newTotalPrice = currentTotalPrice - price * (currentQuantity - 1) + price * currentQuantity;
+			    totalPriceElement.textContent = "$" + newTotalPrice.toFixed(2);
+			}
+			
 			function incrementQuantity(sku) {
-				var quantityElement = document.getElementById("quantity-" + sku);
-				var currentQuantity = parseInt(quantityElement.textContent);
-				quantityElement.textContent = currentQuantity + 1;
-			}
+		        var quantityElement = document.getElementById("quantity-" + sku);
+		        var currentQuantity = parseInt(quantityElement.textContent);
+		        quantityElement.textContent = currentQuantity + 1;
 
-			function decrementQuantity(sku) {
-				var quantityElement = document.getElementById("quantity-" + sku);
-				var currentQuantity = parseInt(quantityElement.textContent);
-				if (currentQuantity > 0) {
-					quantityElement.textContent = currentQuantity - 1;
-				}
-			}
+		        var price = parseFloat(document.getElementById("price-" + sku).textContent.substring(1));
+		        updateTotal(sku, price);
+		    }
+
+		    function decrementQuantity(sku) {
+		        var quantityElement = document.getElementById("quantity-" + sku);
+		        var currentQuantity = parseInt(quantityElement.textContent);
+		        if (currentQuantity > 0) {
+		            quantityElement.textContent = currentQuantity - 1;
+
+		            var price = parseFloat(document.getElementById("price-" + sku).textContent.substring(1));
+		            updateTotal(sku, price);
+		        }
+		    }
 			</script>
 </head>
 <body style="background-color: #dbc1ac;">
@@ -100,7 +116,7 @@
 				    }
 				}
 			%>
-            Total: $<%= String.format("%.2f", total) %>
+            <p id="total-price"><%= String.format("%.2f", total) %></p>
             <% if(customer == null) { %>
 	        <p> You are not logged in, please do so to finalize order </p>
 	        

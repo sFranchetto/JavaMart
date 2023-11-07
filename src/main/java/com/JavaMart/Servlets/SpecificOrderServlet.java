@@ -26,7 +26,7 @@ public class SpecificOrderServlet extends HttpServlet{
 		int order_id = Integer.parseInt(slug);
 		List<OrderDetail> details = null;
 		
-		System.out.println("in here" + order_id);
+		//System.out.println("in here" + order_id);
 		
 		try {
 			details = Order.getOrder(user, order_id);

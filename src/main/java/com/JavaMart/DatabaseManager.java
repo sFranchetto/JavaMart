@@ -7,7 +7,7 @@ public class DatabaseManager {
 	
 	public static Connection RunDB() {
 		Connection connection = null;
-		System.out.println("Start your engines...");
+		//System.out.println("Start your engines...");
 		
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
@@ -23,7 +23,7 @@ public class DatabaseManager {
 	}
 	
 	public static int insertStatement(String statement, Connection con) {
-	    System.out.println(statement);
+	    //System.out.println(statement);
 	    Statement stmt;
 	    try {
 	        stmt = con.createStatement();
@@ -45,7 +45,7 @@ public class DatabaseManager {
 	}
 	
 	public static ResultSet getStatement(String statement, Connection con) {
-	    System.out.println(statement);
+	    //System.out.println(statement);
 	    Statement stmt;
 	    ResultSet rs = null;
 	    try {

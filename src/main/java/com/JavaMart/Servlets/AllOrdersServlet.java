@@ -31,6 +31,7 @@ public class AllOrdersServlet extends HttpServlet{
 				e.printStackTrace();
 			}
 			
+			
 			req.setAttribute("allOrders", allOrders);
 			req.getRequestDispatcher("/pages/view_all_orders.jsp").forward(req, res);
 		}else {
