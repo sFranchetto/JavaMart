@@ -14,6 +14,9 @@
 </style>
 </head>
 <body>
+<%Object staff = session.getAttribute("isStaff"); %>
+<%Object customer = session.getAttribute("isCustomer"); %>
+<%Object passcode = session.getAttribute("passcode"); %>
 <nav class="navbar navbar-expand-lg bg-brown">
   <div class="container-fluid">
     <a class="navbar-brand" href="/JavaMart">JavaMart</a>
@@ -23,10 +26,18 @@
         <li class="nav-item">
           <a class="nav-link active" aria-current="page" href="/JavaMart/products">Catalog</a>
         </li>
+        <% if(passcode != null){%>
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/JavaMart/orders">My Orders</a>
+        </li>
+        <%}else if(staff != null){ %>
+         <a class="nav-link active" aria-current="page" href="/JavaMart/orders?method=staff_orders">View Orders</a>
+         
+        <%} %>
       </ul>
     </div>
   <div class ="ml-auto">
-  		<%Object staff = session.getAttribute("isStaff"); %>
+  		
   		<% if(staff == null || staff.equals(false)){ %>
 		<%} else {%>
 			<a class="nav-link pe-3" href="./create_product">
@@ -35,22 +46,32 @@
 	  	<%} %>
   </div>
   <div class ="ml-auto" style="display: flex;">
-  		<% if(staff == null || staff.equals(false)){ %>
+  		<% if((staff == null || staff.equals(false)) && (customer == null || customer.equals(false))){ %>
 		  	<a class="nav-link pe-3" href="/JavaMart/cart">
 		  		<button type="button" class="btn btn-warning"> My Cart </button>
 		  	</a>
 		  	<a class="nav-link pe-3" href="/JavaMart/login">
 		  		You are not currently logged in.
-		  		<button type="button" class="btn btn-success"> Staff Login</button>
+		  		<button type="button" class="btn btn-success">Login</button>
 		  	</a>
-		<%} else {%>
+		<%} else if ((staff != null)){%>
 			<form action="logout" method="post">
 			<a class="nav-link pe-3" href="/JavaMart/logout">
 				You are currently logged in as Staff. 
 			  	<button type="submit" class="btn btn-danger"> Log out</button>
 			 </a>
 			 </form>
-	  	<%} %>
+	  	<%} else { %>
+	  		<form action="logout" method="post" class="d-flex align-items-center">
+			    <a class="nav-link pe-3" href="/JavaMart/cart">
+			        <button type="button" class="btn btn-warning me-3"> My Cart </button>
+			    </a>
+			    <a class="nav-link pe-3" href="/JavaMart/logout">
+			        You are currently logged in as Customer with passcode <strong><%= passcode %>. </strong>
+			        <button type="submit" class="btn btn-danger"> Log out</button>
+			    </a>
+			</form>
+	  	<%}%>
   </div>
 </div>
 </nav>

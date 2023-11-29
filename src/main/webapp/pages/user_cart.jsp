@@ -12,7 +12,37 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<script>
+			function updateTotal(sku, price) {
+			    var quantityElement = document.getElementById("quantity-" + sku);
+			    var currentQuantity = parseInt(quantityElement.textContent);
+			    var totalPriceElement = document.getElementById("total-price");
+			    var currentTotalPrice = parseFloat(totalPriceElement.textContent.substring(1));
+			    
+			    var newTotalPrice = currentTotalPrice - price * (currentQuantity - 1) + price * currentQuantity;
+			    totalPriceElement.textContent = "$" + newTotalPrice.toFixed(2);
+			}
+			
+			function incrementQuantity(sku) {
+		        var quantityElement = document.getElementById("quantity-" + sku);
+		        var currentQuantity = parseInt(quantityElement.textContent);
+		        quantityElement.textContent = currentQuantity + 1;
 
+		        var price = parseFloat(document.getElementById("price-" + sku).textContent.substring(1));
+		        updateTotal(sku, price);
+		    }
+
+		    function decrementQuantity(sku) {
+		        var quantityElement = document.getElementById("quantity-" + sku);
+		        var currentQuantity = parseInt(quantityElement.textContent);
+		        if (currentQuantity > 0) {
+		            quantityElement.textContent = currentQuantity - 1;
+
+		            var price = parseFloat(document.getElementById("price-" + sku).textContent.substring(1));
+		            updateTotal(sku, price);
+		        }
+		    }
+			</script>
 </head>
 <body style="background-color: #dbc1ac;">
 <%@ include file="../common/navbar.jsp" %>
@@ -28,11 +58,13 @@
                     <tr>
                         <th scope="col" style="background-color: #ECE0D1;border-bottom: 1px solid #000000;"> </th >
                         <th scope="col" style="background-color: #ECE0D1;border-bottom: 1px solid #000000;">Price</th>
+                        <th scope="col" style="background-color: #ECE0D1;border-bottom: 1px solid #000000;">Quantity </th>
                         <th scope="col" style="background-color: #ECE0D1;border-bottom: 1px solid #000000;"> </th>
                     </tr>
                 </thead>
                 <tbody>
                     <%
+                    int quantity = 1;
                     ArrayList<Product> cart = (ArrayList<Product>) request.getAttribute("cart");
                     if (cart != null && !cart.isEmpty()) {
                         for (Product product : cart) {
@@ -43,6 +75,19 @@
                         <%= product.getDescription() %>
                         </td>
                         <td style="background-color: #ECE0D1;">$<%= product.getPrice() %></td>
+                        <td style="background-color: #ECE0D1;">
+                        
+                        <div class="input-group">
+						    <div class="input-group-prepend">
+						        <button type="button" class="btn btn-sm btn-danger" onclick="decrementQuantity('<%= product.getSKU() %>')">-</button>
+						    </div>
+						    <p id="quantity-<%= product.getSKU() %>" class="form-control text-center" style="width: 40px;"><%= quantity %></p>
+						    <div class="input-group-append">
+						        <button type="button" class="btn btn-sm btn-danger" onclick="incrementQuantity('<%= product.getSKU() %>')">+</button>
+						    </div>
+						</div>
+						
+                        </td>
                         <td style="background-color: #ECE0D1;">
                         	<form action="./cart/products/<%= product.getUrlSlug() %>" method="post">
 							    <input type="hidden" name="_method" value="delete">
@@ -61,7 +106,8 @@
                 </tbody>
             </table>
         </div>
-        <div class="card-footer text-muted">
+        <div class="card-footer text-muted d-flex justify-content-between align-items-center">
+        
             <%
 				double total = 0;
 				if (cart != null && !cart.isEmpty()) {
@@ -70,7 +116,22 @@
 				    }
 				}
 			%>
-            Total: $<%= String.format("%.2f", total) %>
+            <p id="total-price"><%= String.format("%.2f", total) %></p>
+            <% if(customer == null) { %>
+	        <p> You are not logged in, please do so to finalize order </p>
+	        
+	        <form action="./login" method="get"> 
+		            <button class="btn btn-primary">
+		  				Continue to Checkout
+					</button>
+	  		</form>
+	  		<%} else { %> 
+	  			<form action="./order_made" method="get"> 
+		            <button class="btn btn-primary">
+		  				Continue to Checkout
+					</button>
+	  		</form>
+	  		<% } %>
         </div>
     </div>
 </div>

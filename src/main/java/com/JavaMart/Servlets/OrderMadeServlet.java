@@ -18,22 +18,27 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 
-@WebServlet("/products")
-public class ProductServlet extends HttpServlet{
+@WebServlet("/order_made")
+public class OrderMadeServlet extends HttpServlet{
+	
 	
 	public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
 		
-		
-		
-		//System.out.println(tempFile.exists());
-		
-		DatabaseManager.RunDB();
+		req.getRequestDispatcher("/pages/create_order.jsp").forward(req, res);
+	}
+	
+	public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
+		HttpSession session = req.getSession();
+		String ship_address = req.getParameter("shippingAddress");
+		String user_id = (String) session.getAttribute("passcode");
 
+		try {
+			Order.CreateOrder(user_id,ship_address);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
-		List<Product> products = ProductFactory.returnAllProducts();
-
-		req.setAttribute("products", products);
-		req.getRequestDispatcher("./pages/products.jsp").forward(req, res);
+		res.sendRedirect("/JavaMart/pages/order_created.jsp");
 	}
 }
-
