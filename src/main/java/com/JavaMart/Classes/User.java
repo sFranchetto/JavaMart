@@ -5,6 +5,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import com.JavaMart.ProductFactory;
 
 public class User{
@@ -22,7 +24,7 @@ public class User{
 	public static class Customer extends User{
 		
 		public Customer() {
-			setUser("TempUser");
+			setUser("customer");
 		}
 		
 		
@@ -49,10 +51,11 @@ public class User{
 	    	ProductFactory.add(product);	
 		}
 		
-		public static File DownloadProductList(){
+		public static File DownloadProductList(HttpServletRequest req){
 			
 			List<Product> products = ProductFactory.returnAllProducts();
-			File file = new File("products.csv");
+			String contextPath = req.getServletContext().getRealPath("/");
+			File file = new File(contextPath + "products.csv");
 			
 			
 			try(FileWriter writer = new FileWriter(file)){

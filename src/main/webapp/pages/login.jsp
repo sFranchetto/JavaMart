@@ -13,6 +13,15 @@
         table, th, td {
             border: none;
         }
+        <style>
+        table, th, td {
+            border: none;
+        }
+
+        /* Style for the error message */
+        .error-message {
+            color: red;
+        }
     </style>
  </head>
 <body style="background-color: #dbc1ac;">
@@ -21,8 +30,13 @@
     <div class="row justify-content-center">
         <div class="col-md-6">
             <div class="card">
+            	<% String errorMessage = (String) request.getAttribute("errorMessage"); %>
+				    <% if (errorMessage != null && !errorMessage.isEmpty()) { %>
+				        <h4 class="error-message"><%= errorMessage %></h4>
+				<% } %>
                 <div class="card-header" style="background-color: #ECE0D1;">Staff Login</div>
                 <div class="card-body" style="background-color: #ECE0D1;">
+                    
                     <form action="login" method="post"> 
                         <div class="mb-3">
                             <label for="staffPassword" class="form-label">Enter Passcode</label> 
@@ -30,14 +44,6 @@
                         </div>
                         <button type="submit" class="btn btn-primary">Login</button>
                     </form>
-                    <% 
-                    String staffIncorrectMessage = (String) request.getAttribute("staffMessage");
-                    if(staffIncorrectMessage != null) {
-                    %>
-                    <div class="alert alert-danger mt-3" role="alert">
-                        <%= staffIncorrectMessage %>
-                    </div>
-                    <% } %>
                 </div>
             </div>
             <div class="mt-4"> 
