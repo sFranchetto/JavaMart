@@ -1,7 +1,7 @@
 package com.JavaMart.Servlets.product;
 
 import com.JavaMart.Classes.*;
-import com.JavaMart.Classes.User.Staff;
+import com.JavaMart.Classes.User;
 
 import java.io.IOException;
 import java.util.List;
@@ -39,7 +39,7 @@ public class ProductDetailsServlet extends HttpServlet {
 			double productPrice = Double.parseDouble(req.getParameter("newPrice"));
 			String productSKU = req.getParameter("newSKU");
 			
-			Staff.UpdateProduct(oldSKU, productName, productDesc, productVendor, productSlug, productPrice, productSKU);
+			User.updateProduct(oldSKU, productName, productDesc, productVendor, productSlug, productPrice, productSKU);
 			slug = slug.substring(1);
 			res.sendRedirect("./" + productSlug);
 		}

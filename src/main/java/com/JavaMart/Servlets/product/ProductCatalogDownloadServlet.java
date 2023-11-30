@@ -2,8 +2,7 @@ package com.JavaMart.Servlets.product;
 
 import com.JavaMart.OperationNotAllowedException;
 import com.JavaMart.Classes.*;
-import com.JavaMart.Classes.User.Customer;
-import com.JavaMart.Classes.User.Staff;
+import com.JavaMart.Classes.User;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -25,7 +24,7 @@ public class ProductCatalogDownloadServlet extends HttpServlet {
 		
 		HttpSession session = req.getSession();
 		
-		File file = Staff.DownloadProductList(req);
+		File file = User.downloadProductList(req);
 		user = CheckSession(session);
 		
 		if (!(user.equals("staff"))) {

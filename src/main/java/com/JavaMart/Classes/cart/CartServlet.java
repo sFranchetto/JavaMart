@@ -2,8 +2,7 @@ package com.JavaMart.Classes.cart;
 
 import com.JavaMart.OperationNotAllowedException;
 import com.JavaMart.Classes.*;
-import com.JavaMart.Classes.User.Customer;
-import com.JavaMart.Classes.User.Staff;
+import com.JavaMart.Classes.User;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -37,9 +36,11 @@ public class CartServlet extends HttpServlet {
 		}else {
 		
 			List<Product> cart = null;
+			
 			try {
 				cart = Cart.getCart(passcode);
-			} catch (SQLException e) {
+				System.out.println(cart.size());
+			} catch (SQLException | ClassNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}

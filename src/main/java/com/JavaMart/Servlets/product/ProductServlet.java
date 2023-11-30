@@ -3,7 +3,7 @@ package com.JavaMart.Servlets.product;
 import com.JavaMart.*;
 import java.io.PrintWriter;
 import com.JavaMart.Classes.*;
-import com.JavaMart.Classes.User.Customer;
+import com.JavaMart.Classes.User;
 
 import java.io.File;
 import java.io.IOException;

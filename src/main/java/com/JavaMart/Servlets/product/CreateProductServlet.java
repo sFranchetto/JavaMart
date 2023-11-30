@@ -1,7 +1,7 @@
 package com.JavaMart.Servlets.product;
 import com.JavaMart.OperationNotAllowedException;
 import com.JavaMart.Classes.*;
-import com.JavaMart.Classes.User.Staff;
+import com.JavaMart.Classes.User;
 
 import java.io.IOException;
 import java.util.List;
@@ -21,8 +21,8 @@ public class CreateProductServlet extends HttpServlet{
 		HttpSession session = req.getSession();
 		if(session.getAttribute("isStaff").equals(true)){
 			String productName = req.getParameter("productName");
-			String productSKU = req.getParameter("productSKU");    
-			Staff.CreateProduct(productName, productSKU);
+			String productSKU = req.getParameter("productSKU");
+			User.createProduct(productName, productSKU);
 		}
 		res.sendRedirect("./products");
 	}

@@ -25,7 +25,7 @@
 	
 	<div>
 		<div style="display: inline-block;">
-			<% if(staff == null || staff.equals(false)){ %>
+			<% if(!(staff)){ %>
     <div class="row">
         <div class="col">
             <form action="/JavaMart/cart/products/<%= product.getUrlSlug() %>" method="post"  >

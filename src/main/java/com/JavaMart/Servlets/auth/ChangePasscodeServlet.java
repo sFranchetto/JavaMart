@@ -26,13 +26,19 @@ public class ChangePasscodeServlet extends HttpServlet {
         String newPasscode = req.getParameter("passcode");
         String passcode = (String) session.getAttribute("passcode");
         
+        
         try {
         	int id = DatabaseManager.getIDFromPasscode(passcode);
-        	DatabaseManager.changePasscode(newPasscode, id);
-
-        	session.setAttribute("successMessage", "Passcode successfully changed");
-        	session.setAttribute("passcode", newPasscode);
-        	res.sendRedirect("/JavaMart/products");
+        	boolean worked = DatabaseManager.changePasscode(newPasscode, id);
+        	
+        	if(worked == true) {
+	        	session.setAttribute("successMessage", "Passcode successfully changed");
+	        	session.setAttribute("passcode", newPasscode);
+	        	res.sendRedirect("/JavaMart/products");
+        	}else {
+        		session.setAttribute("failureMessage", "Passcode already in use! Pick a new one");
+        		res.sendRedirect("/JavaMart/change_passcode");
+        	}
 
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();

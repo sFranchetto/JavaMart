@@ -15,6 +15,13 @@
     <%@ include file="../common/navbar.jsp" %>
 
     <div class="container mt-5">
+        <%-- Display error message if it exists --%>
+        <% if (session.getAttribute("failureMessage") != null) { %>
+            <div class="alert alert-danger" role="alert">
+                <strong>Error:</strong> <%= session.getAttribute("failureMessage") %>
+            </div>
+        <% } %>
+
         <div class="row justify-content-center">
             <div class="col-md-6">
                 <div class="card">

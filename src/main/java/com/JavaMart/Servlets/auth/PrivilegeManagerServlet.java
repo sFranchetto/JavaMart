@@ -14,6 +14,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import com.JavaMart.Classes.User;
+
+//import org.apache.catalina.User;
+
 import java.sql.*;
 
 import com.JavaMart.DatabaseManager;
@@ -23,6 +27,13 @@ public class PrivilegeManagerServlet extends HttpServlet {
     
     public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
         HttpSession session = req.getSession();
+        String userIdString = req.getParameter("userId");
+        int userId = Integer.parseInt(userIdString);
+        DatabaseManager.updateUserType(userId);
+        
+
+        // Print the user ID to the console (you can replace this with your desired action)
+        System.out.println("User ID: " + userId);
 //        String newPasscode = req.getParameter("passcode");
 //        String passcode = (String) session.getAttribute("passcode");
 //        
@@ -44,6 +55,14 @@ public class PrivilegeManagerServlet extends HttpServlet {
 }
 	
 	public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
-		req.getRequestDispatcher("/pages/priveleges_management.jsp").forward(req, res);
+		try {
+            List<User> users = DatabaseManager.getAllUsers();
+            req.setAttribute("users", users);
+            req.getRequestDispatcher("/pages/priveleges_management.jsp").forward(req, res);
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+            res.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error fetching users");
+        }
+		
 	}
 }
