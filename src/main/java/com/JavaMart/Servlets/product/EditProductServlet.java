@@ -2,7 +2,7 @@ package com.JavaMart.Servlets.product;
 
 import com.JavaMart.OperationNotAllowedException;
 import com.JavaMart.Classes.*;
-import com.JavaMart.Classes.User.Customer;
+import com.JavaMart.Classes.User;
 
 import java.io.IOException;
 import java.util.List;

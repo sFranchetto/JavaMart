@@ -3,7 +3,7 @@ package com.JavaMart.Servlets.order;
 import com.JavaMart.*;
 import java.io.PrintWriter;
 import com.JavaMart.Classes.*;
-import com.JavaMart.Classes.User.Customer;
+import com.JavaMart.Classes.User;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,17 +28,17 @@ public class OrderMadeServlet extends HttpServlet{
 	}
 	
 	public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
-		HttpSession session = req.getSession();
-		String ship_address = req.getParameter("shippingAddress");
-		String user_id = (String) session.getAttribute("passcode");
+	    HttpSession session = req.getSession();
+	    String ship_address = req.getParameter("shippingAddress");
+	    String user_id = (String) session.getAttribute("passcode");
 
-		try {
-			Order.CreateOrder(user_id,ship_address);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		res.sendRedirect("/JavaMart/pages/order_created.jsp");
+	    try {
+	        int order_id = Order.CreateOrder(user_id, ship_address);
+	        req.setAttribute("orderId", order_id);
+	        res.sendRedirect("/JavaMart/pages/order_created.jsp?orderId=" + order_id);
+	    } catch (SQLException | ClassNotFoundException e) {
+	        e.printStackTrace();
+	    }
 	}
+
 }

@@ -211,7 +211,13 @@ public class DatabaseManager {
 	    
 	    try (Connection conn = doDbStuff()) {
 	        // Check if passcode is null
-	        if (passcode.equals("temp") && flag == false) {
+	    	String checkTempUserSQL = "SELECT COUNT(*) AS count FROM users WHERE passcode = 'temp'";
+	    	PreparedStatement checkTempUserStmt = conn.prepareStatement(checkTempUserSQL);
+	    	ResultSet tempUserResultSet = checkTempUserStmt.executeQuery();
+	    	tempUserResultSet.next();
+            int tempUserCount = tempUserResultSet.getInt("count");
+	    	
+	    	if (passcode.equals("temp") && flag == false && tempUserCount == 0) {
 	        	// If passcode is null, create a user with passcode "temp"
 	            String createTempUserSQL = "INSERT INTO users (passcode, user_type) VALUES ('temp', 'customer')";
 	            try (PreparedStatement createTempUserStmt = conn.prepareStatement(createTempUserSQL, Statement.RETURN_GENERATED_KEYS)) {
@@ -369,5 +375,86 @@ public class DatabaseManager {
 	        e.printStackTrace();
 	    }
 	}
+	
+	public static int createOrder(String passcode, String shipAddress) {
+	    int orderId = -1; // Default value in case of failure
 
+	    try (Connection conn = doDbStuff()) {
+	        int userId = getIDFromPasscode(passcode);
+
+	        // Check if user exists
+	        if (userId != -1) {
+	            // Insert the order into the order table and return the generated order ID
+	            String createOrderSQL = "INSERT INTO orders (user_id, shipping_address) VALUES (?, ?) RETURNING order_id";
+	            try (PreparedStatement createOrderStmt = conn.prepareStatement(createOrderSQL)) {
+	                createOrderStmt.setInt(1, userId);
+	                createOrderStmt.setString(2, shipAddress);
+
+	                try (ResultSet resultSet = createOrderStmt.executeQuery()) {
+	                    if (resultSet.next()) {
+	                        orderId = resultSet.getInt("order_id");
+	                        System.out.println("Order created with ID: " + orderId);
+	                    } else {
+	                        System.out.println("Failed to retrieve the generated order ID.");
+	                    }
+	                }
+	            }
+	        } else {
+	            // Handle the case where user with the given passcode is not found
+	            System.out.println("User not found for passcode: " + passcode);
+	        }
+	    } catch (SQLException | ClassNotFoundException e) {
+	        // Handle SQL exception
+	        e.printStackTrace();
+	    }
+	    
+	    System.out.println(orderId);
+	    return orderId;
+	}
+	
+	public static void createOrderDetails(int orderId, String passcode) {
+	    try (Connection conn = doDbStuff()) {
+	        // Get cart contents based on passcode
+	        List<Product> cartContents = getUserCart(passcode);
+
+	        // Insert order details into the order_details table for each item in the cart
+	        String createOrderDetailsSQL = "INSERT INTO order_details (order_id, product_id, quantity) VALUES (?, ?, ?)";
+	        try (PreparedStatement createOrderDetailsStmt = conn.prepareStatement(createOrderDetailsSQL)) {
+	            for (Product product : cartContents) {
+	                createOrderDetailsStmt.setInt(1, orderId);
+	                createOrderDetailsStmt.setString(2, product.getSKU());
+	                createOrderDetailsStmt.setInt(3, getProductQuantityInCart(passcode, product.getSKU()));
+	                createOrderDetailsStmt.executeUpdate();
+	            }
+	        }
+	    } catch (SQLException | ClassNotFoundException e) {
+	        // Handle SQL or class not found exception
+	        e.printStackTrace();
+	    }
+	}
+	
+	public static void clearCart(String user) {
+	    try (Connection conn = doDbStuff()) {
+	        // Get user ID from the passcode
+	        int userId = getIDFromPasscode(user);
+
+	        // Check if user exists
+	        if (userId != -1) {
+	            // Delete all entries in the cart for the specified user
+	            String clearCartSQL = "DELETE FROM cart WHERE user_id = ?";
+	            try (PreparedStatement clearCartStmt = conn.prepareStatement(clearCartSQL)) {
+	                clearCartStmt.setInt(1, userId);
+	                int rowsAffected = clearCartStmt.executeUpdate();
+
+	                System.out.println(rowsAffected + " rows deleted from the cart for user: " + user);
+	            }
+	        } else {
+	            // Handle the case where user with the given passcode is not found
+	            System.out.println("User not found for passcode: " + user);
+	        }
+	    } catch (SQLException | ClassNotFoundException e) {
+	        // Handle SQL or class not found exception
+	        e.printStackTrace();
+	    }
+	}
 }

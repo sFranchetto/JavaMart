@@ -5,6 +5,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import com.JavaMart.DatabaseManager;
 
 public class Order {
@@ -24,7 +26,7 @@ public class Order {
 	}
 	
 	public Order() {
-	    // No-argument constructor
+	    
 	}
 
 	
@@ -59,25 +61,28 @@ public class Order {
 	
 	public List<Order> orders;
 	
-	public static void CreateOrder(String user, String shipping_address) throws SQLException {
-		
+	public static int CreateOrder(String user, String shipping_address) throws SQLException, ClassNotFoundException {
+		int order_id = DatabaseManager.createOrder(user, shipping_address);
+		DatabaseManager.createOrderDetails(order_id, user);
+		Cart.clearCart(user);
+		return order_id;
 	}
 	
 	
-	public static List<Order> getOrders(String user) throws SQLException{
-		
-	}
-	
-	public static List<OrderDetail> getOrder(String user, int id) throws SQLException {
-		
-	}
-	
-	public static List<Order> GetAllOrders() throws SQLException{
-		
-	}
-	
-	public static void ShipOrder(int id, String trackingNumber) throws SQLException{
-		
-	}
+//	public static List<Order> getOrders(String user) throws SQLException{
+//		
+//	}
+//	
+//	public static List<OrderDetail> getOrder(String user, int id) throws SQLException {
+//		
+//	}
+//	
+//	public static List<Order> GetAllOrders() throws SQLException{
+//		
+//	}
+//	
+//	public static void ShipOrder(int id, String trackingNumber) throws SQLException{
+//		
+//	}
 }
 
