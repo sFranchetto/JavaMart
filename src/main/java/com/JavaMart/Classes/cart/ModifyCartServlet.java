@@ -20,9 +20,6 @@ import javax.servlet.http.HttpSession;
 @WebServlet("/cart/products/*")
 public class ModifyCartServlet extends HttpServlet {
 	
-	Cart cart = new Cart();
-	String user;
-	
 	public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
 		HttpSession session = req.getSession();
 		String passcode = (String) session.getAttribute("passcode");
@@ -30,17 +27,31 @@ public class ModifyCartServlet extends HttpServlet {
 		
 	    if ("delete".equals(method)) {
 	        doDelete(req, res);
-	    } else if ("patch".equals(method)){
-	    	doPatch(req, res);	    	
+	    } else if ("patch-dec".equals(method)){
+	    	try {
+				doPatchDec(req, res);
+			} catch (ClassNotFoundException | IOException | ServletException | SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}	    	
+	    }
+	    else if ("patch-inc".equals(method)){
+	    	try {
+				doPatchInc(req, res);
+			} catch (ClassNotFoundException | IOException | ServletException | SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}	    	
 	    }else {
 
 			String slug = req.getPathInfo();
 			Product product = Product.GetProductBySlug(slug);
-
+			
 			try {
 				if(passcode == null) {
-					Cart.addProductToCart(passcode, product.getSKU());
 					session.setAttribute("passcode", "temp");
+					passcode = "temp";
+					Cart.addProductToCart(passcode, product.getSKU());
 				}else {
 					Cart.addProductToCart(passcode, product.getSKU());
 				}
@@ -52,50 +63,80 @@ public class ModifyCartServlet extends HttpServlet {
 	    }
 	}
 	
-//	public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
-//		HttpSession session = req.getSession();
-//		user = CheckSession(session);
-//		if (user.equals("staff")) {
-//			try {
-//				throw new OperationNotAllowedException("Staff members are not allowed to access the cart.");
-//			}catch (OperationNotAllowedException e) {
-//                req.setAttribute("e", e);
-//                req.getRequestDispatcher("/common/error_page.jsp").forward(req, res);
-//            }
-//		}else {
-//			req.getRequestDispatcher("/pages/user_cart.jsp").forward(req, res);
-//		}
-//	}
-//	
-//	public void doDelete(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
-//
-//		HttpSession session = req.getSession();
-//		String passcode = (String) session.getAttribute("passcode");
-//		String slug = req.getPathInfo();
-//			
-//		
-//		Product product = Product.GetProductBySlug(slug);
-//		cart.RemoveProductFromCart(passcode, product.getSKU());
-//		
-//		res.sendRedirect("/JavaMart/cart");
-//	}
-//	
-	public void doPatch(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
-		System.out.println("POSA");
+	public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
+		HttpSession session = req.getSession();
+		String passcode = (String) session.getAttribute("passcode"); 
+		String type ="";
+		try {
+			type = DatabaseManager.getUserTypeFromPasscode(passcode);
+		} catch (ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if (type.equals("staff")) {
+			try {
+				throw new OperationNotAllowedException("Staff members are not allowed to access the cart.");
+			}catch (OperationNotAllowedException e) {
+                req.setAttribute("e", e);
+                req.getRequestDispatcher("/common/error_page.jsp").forward(req, res);
+            }
+		}else {
+			req.getRequestDispatcher("/pages/user_cart.jsp").forward(req, res);
+		}
+	}
+	
+	public void doDelete(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
+
+		HttpSession session = req.getSession();
+		String passcode = (String) session.getAttribute("passcode");
 		String slug = req.getPathInfo();
 			
 		
 		Product product = Product.GetProductBySlug(slug);
+		try {
+			Cart.removeProductFromCart(passcode, product.getSKU());
+		} catch (SQLException | ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		res.sendRedirect("/JavaMart/cart");
 	}
-//	
-//	
-//	private String CheckSession(HttpSession session) {
-//		if(session.getAttribute("isStaff") == null) {
-//			return "TempUser";
-//		}else {
-//			return "staff";
-//		}
-//	}
+	
+	public void doPatchInc(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException, ClassNotFoundException, SQLException {
+		System.out.println("inc");
+		String slug = req.getPathInfo();
+		HttpSession session = req.getSession();
+		String passcode = (String) session.getAttribute("passcode");	
+		
+		Product product = Product.GetProductBySlug(slug);
+		product.getSKU();
+		
+		Cart.setProductQuantityInCart(passcode,product.getSKU(), 1);
+		
+		res.sendRedirect("/JavaMart/cart");
+	}
+	
+	public void doPatchDec(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException, ClassNotFoundException, SQLException {
+	    System.out.println("dec");
+	    String slug = req.getPathInfo();
+	    HttpSession session = req.getSession();
+	    String passcode = (String) session.getAttribute("passcode");
+
+	    Product product = Product.GetProductBySlug(slug);
+	    String sku = product.getSKU();
+
+	    // Get the current quantity in the cart
+	    int currentQuantity = Cart.getProductQuantityInCart(passcode, sku);
+	    
+	    System.out.println(currentQuantity);
+	    if(currentQuantity == 1) {
+	    	Cart.removeProductFromCart(passcode, product.getSKU());
+	    }
+	    else if (currentQuantity > 0) {
+	        // Decrement the quantity
+	        Cart.setProductQuantityInCart(passcode, sku, -1);
+	    }
+	    res.sendRedirect("/JavaMart/cart");
+	}
 }

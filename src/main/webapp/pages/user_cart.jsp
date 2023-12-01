@@ -32,11 +32,13 @@
                     </tr>
                 </thead>
                 <tbody>
+                	
                     <%
-                    int quantity = 1;
+                    int quantity;
                     ArrayList<Product> cart = (ArrayList<Product>) request.getAttribute("cart");
                     if (cart != null && !cart.isEmpty()) {
                         for (Product product : cart) {
+                        	 quantity = Cart.getProductQuantityInCart(passcode.toString(), product.getSKU());
                     %>
                     <tr style="border-bottom: 1px solid #000000;">
                         
@@ -48,13 +50,13 @@
                         
                         <div class="input-group">
                         	<form action="./cart/products/<%= product.getUrlSlug() %>" method="post">
-							    <input type="hidden" name="_method" value="patch">
-							    <button type="submit" class="btn btn-danger">-</button>
+							    <input type="hidden" name="_method" value="patch-dec">
+							    <button type="submit" class="btn btn-info">-</button>
 							</form>
 							<p id="quantity-<%= product.getSKU() %>" class="form-control text-center" style="width: 40px;"><%= quantity %></p>
 							<form action="./cart/products/<%= product.getUrlSlug() %>" method="post">
-							    <input type="hidden" name="_method" value="patch">
-							    <button type="submit" class="btn btn-danger">+</button>
+							    <input type="hidden" name="_method" value="patch-inc">
+							    <button type="submit" class="btn btn-info">+</button>
 							</form>							
 						</div>
 						
@@ -80,29 +82,31 @@
         <div class="card-footer text-muted d-flex justify-content-between align-items-center">
         
             <%
-				double total = 0;
-				if (cart != null && !cart.isEmpty()) {
-				    for (Product product : cart) {
-				        total += product.getPrice();
-				    }
-				}
+			    double total = 0;
+			    if (cart != null && !cart.isEmpty()) {
+			        for (Product product : cart) {
+			            quantity = Cart.getProductQuantityInCart(passcode.toString(), product.getSKU());
+			            total += product.getPrice() * quantity;
+			        }
+			    }
 			%>
-            <p id="total-price"><%= String.format("%.2f", total) %></p>
-            <% if(!(customer)) { %>
-	        <p> You are not logged in, please do so to finalize order </p>
-	        
-	        <form action="./login" method="get"> 
-		            <button class="btn btn-primary">
-		  				Continue to Checkout
-					</button>
-	  		</form>
-	  		<%} else { %> 
-	  			<form action="./order_made" method="get"> 
-		            <button class="btn btn-primary">
-		  				Continue to Checkout
-					</button>
-	  		</form>
-	  		<% } %>
+			<p id="total-price"><strong> Total price: $<%= String.format("%.2f", total) %> </strong></p>
+			<% if (!(customer)) { %>
+			    <p> You are not logged in, please do so to finalize the order </p>
+			
+			    <form action="./login" method="get">
+			        <button class="btn btn-primary">
+			            Continue to Checkout
+			        </button>
+			    </form>
+			<% } else { %>
+			    <form action="./order_made" method="get">
+			        <button class="btn btn-primary">
+			            Continue to Checkout
+			        </button>
+			    </form>
+			<% } %>
+
         </div>
     </div>
 </div>

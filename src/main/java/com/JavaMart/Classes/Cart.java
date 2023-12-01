@@ -17,21 +17,22 @@ public class Cart {
 	}
 	
 	public static void addProductToCart(String user, String sku) throws ClassNotFoundException, SQLException {
-		DatabaseManager.addProductToCart(user, sku, 0);
+		DatabaseManager.addProductToCart(user, sku);
 	}
 			
-	public void removeProductFromCart(String user, String sku) {
+	public static void removeProductFromCart(String user, String sku) throws ClassNotFoundException, SQLException {
+		DatabaseManager.removeProductFromCart(user, sku);
 		
 	}
 	
-	public void setProductQuantityInCart(String user, String sku, int quantity) {
-		
-
+	public static void setProductQuantityInCart(String user, String sku, int quantity)  throws ClassNotFoundException, SQLException{
+		DatabaseManager.updateProductQuantity(user, sku, quantity);
 	}
 	
-//	public int getProductQuantityInCart(String user, String sku) {
-//	   
-//	}
+	public static int getProductQuantityInCart(String passcode, String sku) throws ClassNotFoundException, SQLException {
+		int quantity = DatabaseManager.getProductQuantityInCart(passcode, sku);
+		return quantity;
+	}
 	
 	public static void clearCart(String user) {
 		

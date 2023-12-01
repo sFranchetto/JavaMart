@@ -11,7 +11,7 @@ import com.JavaMart.Classes.Product;
 public class DatabaseManager {
 
 	private static Connection conn;
-
+	static boolean flag = false;
 	public static Connection doDbStuff() throws ClassNotFoundException {
 	    Connection conn = null;
 	    try {
@@ -183,22 +183,20 @@ public class DatabaseManager {
     }	
 	
 	public static List<Product> getUserCart(String passcode) throws SQLException, ClassNotFoundException {
-	    List<Product> userCart = new ArrayList<>();
+		List<Product> userCart = new ArrayList<>();
 
 	    try (Connection conn = doDbStuff()) {
-	        String selectSQL = "SELECT sku, quantity FROM cart WHERE user_id = (SELECT user_id FROM users WHERE passcode = ?)";
+	        String selectSQL = "SELECT user_id, sku, quantity FROM cart WHERE user_id = (SELECT id FROM users WHERE passcode = ?)";
 	        try (PreparedStatement pstmt = conn.prepareStatement(selectSQL)) {
 	            pstmt.setString(1, passcode);
 
 	            try (ResultSet resultSet = pstmt.executeQuery()) {
 	                while (resultSet.next()) {
 	                    String sku = resultSet.getString("sku");
-	                    int quantity = resultSet.getInt("quantity");
 
 	                    // Assuming you have a method GetProduct that returns a Product by SKU
 	                    Product product = Product.GetProduct(sku);
 	                    if (product != null) {
-
 	                        userCart.add(product);
 	                    }
 	                }
@@ -209,19 +207,21 @@ public class DatabaseManager {
 	    return userCart;
 	}
 	
-	public static void addProductToCart(String passcode, String sku, int quantity) throws SQLException, ClassNotFoundException {
-	    System.out.println(passcode);
-		try (Connection conn = doDbStuff()) {
+	public static void addProductToCart(String passcode, String sku) throws SQLException, ClassNotFoundException {
+	    
+	    try (Connection conn = doDbStuff()) {
 	        // Check if passcode is null
-	        if (passcode == null) {
-	            // If passcode is null, create a user with passcode "temp"
+	        if (passcode.equals("temp") && flag == false) {
+	        	// If passcode is null, create a user with passcode "temp"
 	            String createTempUserSQL = "INSERT INTO users (passcode, user_type) VALUES ('temp', 'customer')";
 	            try (PreparedStatement createTempUserStmt = conn.prepareStatement(createTempUserSQL, Statement.RETURN_GENERATED_KEYS)) {
 	                createTempUserStmt.executeUpdate();
-	                
+
 	                passcode = "temp";
 	                // Add the product to the cart
-	                addProductToCart(passcode, sku,0);
+	                
+	                flag = true;
+	                addProductToCart(passcode, sku);
 	            }
 	        } else {
 	            // If passcode is not null, proceed to add the product to the cart
@@ -241,20 +241,18 @@ public class DatabaseManager {
 
 	                        if (count > 0) {
 	                            // If the product is already in the cart, update the quantity
-	                            String updateQuantitySQL = "UPDATE cart SET quantity = quantity + ? WHERE user_id = ? AND sku = ?";
+	                            String updateQuantitySQL = "UPDATE cart SET quantity = quantity + 1 WHERE user_id = ? AND sku = ?";
 	                            try (PreparedStatement updateQuantityStmt = conn.prepareStatement(updateQuantitySQL)) {
-	                                updateQuantityStmt.setInt(1, quantity);
-	                                updateQuantityStmt.setInt(2, userId);
-	                                updateQuantityStmt.setString(3, sku);
+	                                updateQuantityStmt.setInt(1, userId);
+	                                updateQuantityStmt.setString(2, sku);
 	                                updateQuantityStmt.executeUpdate();
 	                            }
 	                        } else {
-	                            // If the product is not in the cart, insert a new row
-	                            String insertSQL = "INSERT INTO cart (user_id, sku, quantity) VALUES (?, ?, ?)";
+	                            // If the product is not in the cart, insert a new row with quantity 1
+	                            String insertSQL = "INSERT INTO cart (user_id, sku, quantity) VALUES (?, ?, 1)";
 	                            try (PreparedStatement insertStmt = conn.prepareStatement(insertSQL)) {
 	                                insertStmt.setInt(1, userId);
 	                                insertStmt.setString(2, sku);
-	                                insertStmt.setInt(3, quantity);
 	                                insertStmt.executeUpdate();
 	                            }
 	                        }
@@ -264,6 +262,107 @@ public class DatabaseManager {
 	                // Handle the case where user with the given passcode is not found
 	                System.out.println("User not found for passcode: " + passcode);
 	            }
+	        }
+	    } catch (SQLException e) {
+	        // Handle SQL exception
+	        e.printStackTrace();
+	    }
+	}
+
+	
+	public static void updateProductQuantity(String passcode, String sku, int quantityChange) throws SQLException, ClassNotFoundException {
+	    try (Connection conn = doDbStuff()) {
+	        // Check if passcode is null
+	        if (passcode == null) {
+	            // Handle the case where passcode is null
+	            System.out.println("Passcode is null. Cannot update quantity.");
+	            return;
+	        }
+
+	        // If passcode is not null, proceed to update the product quantity in the cart
+	        int userId = getIDFromPasscode(passcode);
+
+	        // Check if user exists and proceed to update the product quantity in the cart
+	        if (userId != -1) {
+	            // Update the product quantity in the cart
+	            String updateQuantitySQL = "UPDATE cart SET quantity = quantity + ? WHERE user_id = ? AND sku = ?";
+	            try (PreparedStatement updateQuantityStmt = conn.prepareStatement(updateQuantitySQL)) {
+	                updateQuantityStmt.setInt(1, quantityChange);
+	                updateQuantityStmt.setInt(2, userId);
+	                updateQuantityStmt.setString(3, sku);
+	                updateQuantityStmt.executeUpdate();
+	            }
+	        } else {
+	            // Handle the case where user with the given passcode is not found
+	            System.out.println("User not found for passcode: " + passcode);
+	        }
+	    } catch (SQLException e) {
+	        // Handle SQL exception
+	        e.printStackTrace();
+	    }
+	}
+	
+	public static int getProductQuantityInCart(String passode, String sku) throws SQLException, ClassNotFoundException {
+	    int quantity = 0;
+
+	    try (Connection conn = doDbStuff()) {
+	        String selectSQL = "SELECT quantity FROM cart WHERE user_id = (SELECT id FROM users WHERE passcode = ?) AND sku = ?";
+	        try (PreparedStatement pstmt = conn.prepareStatement(selectSQL)) {
+	            pstmt.setString(1, passode);
+	            pstmt.setString(2, sku);
+
+	            try (ResultSet resultSet = pstmt.executeQuery()) {
+	                if (resultSet.next()) {
+	                    quantity = resultSet.getInt("quantity");
+	                }
+	            }
+	        }
+	    }
+
+	    return quantity;
+	}
+	
+	public static void removeProductFromCart(String passcode, String sku) throws SQLException, ClassNotFoundException {
+	    try (Connection conn = doDbStuff()) {
+	        // Check if passcode is null
+	        if (passcode == null) {
+	            // Handle the case where passcode is null
+	            System.out.println("Passcode is null. Cannot remove product from cart.");
+	            return;
+	        }
+
+	        // If passcode is not null, proceed to remove the product from the cart
+	        int userId = getIDFromPasscode(passcode);
+
+	        // Check if user exists and proceed to remove the product from the cart
+	        if (userId != -1) {
+	            // Check if the product is in the cart
+	            String checkIfExistsSQL = "SELECT COUNT(*) AS count FROM cart WHERE user_id = ? AND sku = ?";
+	            try (PreparedStatement checkIfExistsStmt = conn.prepareStatement(checkIfExistsSQL)) {
+	                checkIfExistsStmt.setInt(1, userId);
+	                checkIfExistsStmt.setString(2, sku);
+
+	                try (ResultSet resultSet = checkIfExistsStmt.executeQuery()) {
+	                    resultSet.next();
+	                    int count = resultSet.getInt("count");
+
+	                    if (count > 0) {
+	                        // If the product is in the cart, remove it
+	                        String removeProductSQL = "DELETE FROM cart WHERE user_id = ? AND sku = ?";
+	                        try (PreparedStatement removeProductStmt = conn.prepareStatement(removeProductSQL)) {
+	                            removeProductStmt.setInt(1, userId);
+	                            removeProductStmt.setString(2, sku);
+	                            removeProductStmt.executeUpdate();
+	                        }
+	                    } else {
+	                        // If the product is not in the cart, log a message
+	                        System.out.println("Product with SKU " + sku + " not found in the cart for user " + passcode);
+	                    }
+	                }
+	            }
+	        } else {
+	            // Handle the case where user with the given passcode is not found
+	            System.out.println("User not found for passcode: " + passcode);
 	        }
 	    } catch (SQLException e) {
 	        // Handle SQL exception

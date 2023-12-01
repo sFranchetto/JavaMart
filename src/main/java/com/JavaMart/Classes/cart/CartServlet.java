@@ -1,5 +1,6 @@
 package com.JavaMart.Classes.cart;
 
+import com.JavaMart.DatabaseManager;
 import com.JavaMart.OperationNotAllowedException;
 import com.JavaMart.Classes.*;
 import com.JavaMart.Classes.User;
@@ -24,17 +25,16 @@ public class CartServlet extends HttpServlet {
 	public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
 		HttpSession session = req.getSession();
 		//user = CheckSession(session);
-		String passcode = (String) session.getAttribute("passcode");
+		String passcode = (String) session.getAttribute("passcode"); 
+		String type ="";
+		try {
+			type = DatabaseManager.getUserTypeFromPasscode(passcode);
+		} catch (ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
-		if (passcode == null && session.getAttribute("isStaff") != null) {
-			try {
-				throw new OperationNotAllowedException("Staff members are not allowed to access the cart.");
-			}catch (OperationNotAllowedException e) {
-                req.setAttribute("e", e);
-                req.getRequestDispatcher("/common/error_page.jsp").forward(req, res);
-            }
-		}else {
-		
+		if((type == null) || type.equals("customer")){
 			List<Product> cart = null;
 			
 			try {
@@ -46,17 +46,17 @@ public class CartServlet extends HttpServlet {
 			}
 			req.setAttribute("cart", cart);
 			req.getRequestDispatcher("/pages/user_cart.jsp").forward(req, res);
+		}else if (type.equals("staff")) {
+			try {
+				throw new OperationNotAllowedException("Staff members are not allowed to access the cart.");
+			}catch (OperationNotAllowedException e) {
+                req.setAttribute("e", e);
+                req.getRequestDispatcher("/common/error_page.jsp").forward(req, res);
+            }
 		}
 	}
 	
 	public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {}
 	
 	
-	private String CheckSession(HttpSession session) {
-		if(session.getAttribute("isStaff") == null) {
-			return "TempUser";
-		}else {
-			return "staff";
-		}
-	}
 }
