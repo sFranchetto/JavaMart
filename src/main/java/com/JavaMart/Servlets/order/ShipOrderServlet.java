@@ -30,7 +30,7 @@ public class ShipOrderServlet extends HttpServlet{
 		
 		try {
 			Order.ShipOrder(orderId, trackingNum);
-		} catch (SQLException e) {
+		} catch (SQLException | ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

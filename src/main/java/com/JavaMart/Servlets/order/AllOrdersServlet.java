@@ -26,7 +26,7 @@ public class AllOrdersServlet extends HttpServlet{
 			List<Order> allOrders = null; 
 			try {
 				allOrders = Order.GetAllOrders();
-			} catch (SQLException e) {
+			} catch (SQLException | ClassNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -39,8 +39,8 @@ public class AllOrdersServlet extends HttpServlet{
 			List<Order> orders = null;
 			
 			try {
-				orders = Order.getOrders(user_id);
-			} catch (SQLException e) {
+				orders = Order.GetOrders(user_id);
+			} catch (SQLException | ClassNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}

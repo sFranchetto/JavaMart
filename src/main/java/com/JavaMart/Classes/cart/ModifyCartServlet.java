@@ -126,10 +126,8 @@ public class ModifyCartServlet extends HttpServlet {
 	    Product product = Product.GetProductBySlug(slug);
 	    String sku = product.getSKU();
 
-	    // Get the current quantity in the cart
 	    int currentQuantity = Cart.getProductQuantityInCart(passcode, sku);
-	    
-	    System.out.println(currentQuantity);
+
 	    if(currentQuantity == 1) {
 	    	Cart.removeProductFromCart(passcode, product.getSKU());
 	    }

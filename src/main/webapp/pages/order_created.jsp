@@ -18,7 +18,6 @@
         <h2>Order has been created!</h2>
         
         <% 
-            // Get the order ID from the URL parameter
             String orderId = request.getParameter("orderId");
             if (orderId != null) {
         %>

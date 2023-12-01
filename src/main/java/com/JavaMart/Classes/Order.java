@@ -13,7 +13,7 @@ public class Order {
 	public static List<Order> order;
 	String user;
 	int id;
-	static boolean isShipped;
+	boolean isShipped;
 	String trackingNum;
 	String shipping_address;
 	
@@ -54,10 +54,6 @@ public class Order {
 		this.trackingNum = trackingNum;
 	}
 	
-	public static void shipOrder(String trackingNum) {
-		isShipped = true;
-		trackingNum = trackingNum;
-	}
 	
 	public List<Order> orders;
 	
@@ -69,20 +65,28 @@ public class Order {
 	}
 	
 	
-//	public static List<Order> getOrders(String user) throws SQLException{
-//		
-//	}
-//	
-//	public static List<OrderDetail> getOrder(String user, int id) throws SQLException {
-//		
-//	}
-//	
-//	public static List<Order> GetAllOrders() throws SQLException{
-//		
-//	}
-//	
-//	public static void ShipOrder(int id, String trackingNumber) throws SQLException{
-//		
-//	}
+	public static List<Order> GetOrders(String user) throws SQLException, ClassNotFoundException{
+		List<Order> orders = new ArrayList<>();
+		orders = DatabaseManager.getOrdersByUserPasscode(user);
+		return orders;
+	}
+	
+	public static List<OrderDetail> getOrder(int id) throws SQLException, ClassNotFoundException {
+		List<OrderDetail> order_detail= new ArrayList<>();
+		order_detail = DatabaseManager.getOrderDetails(id);
+		return order_detail;
+		
+	}
+	
+	public static List<Order> GetAllOrders() throws SQLException, ClassNotFoundException{
+		List<Order> all_orders = new ArrayList<>();
+		all_orders = DatabaseManager.getAllOrder();
+		return all_orders;
+	}
+	
+	public static void ShipOrder(int id, String trackingNumber) throws SQLException, ClassNotFoundException{
+		DatabaseManager.shipOrder(id, trackingNumber);
+		System.out.println("Shipped!" + id + " " + trackingNumber);
+	}
 }
 

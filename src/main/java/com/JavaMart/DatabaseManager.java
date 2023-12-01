@@ -6,6 +6,8 @@ import java.util.List;
 
 import com.JavaMart.Classes.User;
 import com.JavaMart.Classes.Cart;
+import com.JavaMart.Classes.Order;
+import com.JavaMart.Classes.OrderDetail;
 import com.JavaMart.Classes.Product;
 
 public class DatabaseManager {
@@ -145,7 +147,8 @@ public class DatabaseManager {
 	                    int id = resultSet.getInt("id");
 	                    String passcode = resultSet.getString("passcode");
 	                    String userType = resultSet.getString("user_type");
-
+	                    
+	                    System.out.println(userType);
 	                    User user = new User(id, passcode, userType);
 	                    userList.add(user);
 	                }
@@ -385,7 +388,7 @@ public class DatabaseManager {
 	        // Check if user exists
 	        if (userId != -1) {
 	            // Insert the order into the order table and return the generated order ID
-	            String createOrderSQL = "INSERT INTO orders (user_id, shipping_address) VALUES (?, ?) RETURNING order_id";
+	            String createOrderSQL = "INSERT INTO orders (user_id, shipping_address, isShipped, trackingNum) VALUES (?, ?, false, null) RETURNING order_id";
 	            try (PreparedStatement createOrderStmt = conn.prepareStatement(createOrderSQL)) {
 	                createOrderStmt.setInt(1, userId);
 	                createOrderStmt.setString(2, shipAddress);
@@ -457,4 +460,131 @@ public class DatabaseManager {
 	        e.printStackTrace();
 	    }
 	}
+	
+	public static List<Order> getOrdersByUserPasscode(String passcode) throws SQLException, ClassNotFoundException {
+	    List<Order> orders = new ArrayList<>();
+
+	    try (Connection conn = doDbStuff()) {
+	        // SQL query to retrieve orders based on user passcode
+	        String selectSQL = "SELECT o.order_id, o.user_id, o.shipping_address, o.isShipped, o.trackingNum " +
+	                           "FROM orders o " +
+	                           "INNER JOIN users u ON o.user_id = u.id " +
+	                           "WHERE u.passcode = ?";
+	        
+	        try (PreparedStatement pstmt = conn.prepareStatement(selectSQL)) {
+	            pstmt.setString(1, passcode);
+
+	            try (ResultSet resultSet = pstmt.executeQuery()) {
+	                while (resultSet.next()) {
+	                    int orderID = resultSet.getInt("order_id");
+	                    //int userID = resultSet.getInt("user_id");
+	                    String shippingAddress = resultSet.getString("shipping_address");
+	                    boolean isShipped = resultSet.getBoolean("isShipped");
+	                    String trackingNum = resultSet.getString("trackingNum");
+
+	                    // Create an Order object and add it to the list
+	                    Order order = new Order(passcode, orderID, shippingAddress, isShipped, trackingNum);
+	                    orders.add(order);
+	                }
+	            }
+	        }
+	    }
+
+	    return orders;
+	}
+	
+	public static List<Order> getAllOrder() throws SQLException, ClassNotFoundException {
+        List<Order> orders = new ArrayList<>();
+
+        try (Connection conn = doDbStuff()) {
+            // SQL query to retrieve all orders with user passcode
+            String selectSQL = "SELECT o.order_id, o.user_id, o.shipping_address, o.isShipped, o.trackingNum, u.passcode " +
+                               "FROM orders o, users u " +
+                               "WHERE o.user_id = u.id";
+
+            try (PreparedStatement pstmt = conn.prepareStatement(selectSQL)) {
+                try (ResultSet resultSet = pstmt.executeQuery()) {
+                    while (resultSet.next()) {
+                        int orderId = resultSet.getInt("order_id");
+                        String shippingAddress = resultSet.getString("shipping_address");
+                        boolean isShipped = resultSet.getBoolean("isShipped");
+                        String trackingNum = resultSet.getString("trackingNum");
+                        String passcode = resultSet.getString("passcode");
+
+                        // Create an Order object and add it to the list
+                        Order order = new Order(passcode, orderId, shippingAddress, isShipped, trackingNum);
+                        orders.add(order);
+                    }
+                }
+            }
+        }
+
+        return orders;
+    }
+	
+	public static List<OrderDetail> getOrderDetails(int orderId) throws SQLException, ClassNotFoundException {
+	    List<OrderDetail> orderDetails = new ArrayList<>();
+
+	    try (Connection conn = doDbStuff()) {
+	        // SQL query to retrieve order details based on order ID
+	        String selectSQL = "SELECT order_detail_id, product_id, quantity " +
+	                           "FROM order_details " +
+	                           "WHERE order_id = ?";
+
+	        try (PreparedStatement pstmt = conn.prepareStatement(selectSQL)) {
+	            pstmt.setInt(1, orderId);
+
+	            try (ResultSet resultSet = pstmt.executeQuery()) {
+	                while (resultSet.next()) {
+	                    String productId = resultSet.getString("product_id");
+	                    int quantity = resultSet.getInt("quantity");
+
+	                    // Create an OrderDetail object and add it to the list
+	                    OrderDetail orderDetail = new OrderDetail(orderId, productId, quantity);
+	                    orderDetails.add(orderDetail);
+	                }
+	            }
+	        }
+	    }
+
+	    return orderDetails;
+	}
+
+	
+	public static void shipOrder(int orderId, String trackingNumber) throws SQLException, ClassNotFoundException {
+	    try (Connection conn = doDbStuff()) {
+	        // Update the order to set isShipped to true and attach the tracking number
+	        String updateOrderSQL = "UPDATE orders SET isShipped = ?, trackingNum = ? WHERE order_id = ?";
+	        try (PreparedStatement updateOrderStmt = conn.prepareStatement(updateOrderSQL)) {
+	            updateOrderStmt.setBoolean(1, true);
+	            updateOrderStmt.setString(2, trackingNumber);
+	            updateOrderStmt.setInt(3, orderId);
+
+	            updateOrderStmt.executeUpdate();
+	        }
+	    }
+	}
+	
+	public static boolean isOrderShipped(int orderId) throws SQLException, ClassNotFoundException {
+	    boolean isShipped = false;
+
+	    try (Connection conn = doDbStuff()) {
+	        // Assuming you have a column named isShipped in your order_details table
+	        String selectSQL = "SELECT isShipped FROM orders WHERE order_id = ?";
+
+	        try (PreparedStatement pstmt = conn.prepareStatement(selectSQL)) {
+	            pstmt.setInt(1, orderId);
+
+	            try (ResultSet resultSet = pstmt.executeQuery()) {
+	                if (resultSet.next()) {
+	                    // Retrieve the value of isShipped from the result set
+	                    isShipped = resultSet.getBoolean("isShipped");
+	                }
+	            }
+	        }
+	    }
+
+	    return isShipped;
+	}
+
 }

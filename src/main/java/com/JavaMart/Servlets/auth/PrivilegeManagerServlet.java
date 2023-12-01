@@ -57,6 +57,12 @@ public class PrivilegeManagerServlet extends HttpServlet {
 	public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
 		try {
             List<User> users = DatabaseManager.getAllUsers();
+            for (User user : users) {
+                System.out.println("User ID: " + user.getId());
+                System.out.println("Passcode: " + user.getPasscode());
+                System.out.println("User Type: " + user.getUserType());
+                System.out.println("------------------------");
+            }
             req.setAttribute("users", users);
             req.getRequestDispatcher("/pages/priveleges_management.jsp").forward(req, res);
         } catch (SQLException | ClassNotFoundException e) {
