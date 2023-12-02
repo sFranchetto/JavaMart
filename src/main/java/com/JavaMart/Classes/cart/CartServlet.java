@@ -24,7 +24,6 @@ public class CartServlet extends HttpServlet {
 	
 	public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
 		HttpSession session = req.getSession();
-		//user = CheckSession(session);
 		String passcode = (String) session.getAttribute("passcode"); 
 		String type ="";
 		try {
@@ -34,18 +33,20 @@ public class CartServlet extends HttpServlet {
 			e.printStackTrace();
 		}
 		
+		//If a user is either not logged in, or is a customer return their cart
 		if((type == null) || type.equals("customer")){
 			List<Product> cart = null;
 			
 			try {
 				cart = Cart.getCart(passcode);
-				System.out.println(cart.size());
 			} catch (SQLException | ClassNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			req.setAttribute("cart", cart);
 			req.getRequestDispatcher("/pages/user_cart.jsp").forward(req, res);
+		
+		//If a staff attempts to use the cart
 		}else if (type.equals("staff")) {
 			try {
 				throw new OperationNotAllowedException("Staff members are not allowed to access the cart.");

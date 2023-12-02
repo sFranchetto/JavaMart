@@ -44,7 +44,8 @@ public class ModifyCartServlet extends HttpServlet {
 			}	    	
 	    }else {
 
-			String slug = req.getPathInfo();
+			//Adds a product to the cart
+	    	String slug = req.getPathInfo();
 			Product product = Product.GetProductBySlug(slug);
 			
 			try {
@@ -93,6 +94,7 @@ public class ModifyCartServlet extends HttpServlet {
 			
 		
 		Product product = Product.GetProductBySlug(slug);
+		//Removes a product from the cart
 		try {
 			Cart.removeProductFromCart(passcode, product.getSKU());
 		} catch (SQLException | ClassNotFoundException e) {
@@ -109,6 +111,7 @@ public class ModifyCartServlet extends HttpServlet {
 		HttpSession session = req.getSession();
 		String passcode = (String) session.getAttribute("passcode");	
 		
+		//Increase the quantity in the cart
 		Product product = Product.GetProductBySlug(slug);
 		product.getSKU();
 		
@@ -128,6 +131,7 @@ public class ModifyCartServlet extends HttpServlet {
 
 	    int currentQuantity = Cart.getProductQuantityInCart(passcode, sku);
 
+	    //Decrements quantity in the cart, if the quantity = 0 then remove the product
 	    if(currentQuantity == 1) {
 	    	Cart.removeProductFromCart(passcode, product.getSKU());
 	    }

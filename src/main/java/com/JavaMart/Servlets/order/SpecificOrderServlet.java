@@ -19,7 +19,6 @@ import javax.servlet.http.HttpSession;
 public class SpecificOrderServlet extends HttpServlet{
 	public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
 		HttpSession session = req.getSession();
-		String user = (String) session.getAttribute("passcode");
 		
 		String slug = req.getPathInfo();
 		slug = slug.substring(1);

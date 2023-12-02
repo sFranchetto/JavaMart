@@ -35,7 +35,8 @@ public class User {
         return userType;
     }
     
-
+    
+    //Lets a staff updates fields in a product
     public static void updateProduct(String oldSKU, String name, String description, String vendor, String urlSlug, double price, String newSKU) {
         Product product = Product.GetProduct(oldSKU);
         product.setName(name);
@@ -46,6 +47,7 @@ public class User {
         product.setSKU(newSKU);
     }
 
+    //Lets staff create a new product
     public static void createProduct(String name, String sku) {
         Product product = new Product();
         product.setName(name);
@@ -55,6 +57,7 @@ public class User {
         ProductFactory.add(product);
     }
 
+    //Lets staff download a list of products in a csv file
     public static File downloadProductList(HttpServletRequest req) {
             List<Product> products = ProductFactory.returnAllProducts();
             String contextPath = req.getServletContext().getRealPath("/");
@@ -75,11 +78,13 @@ public class User {
             return file;
     }
     
+    //Lets both users and staff change their passcode
     public static boolean SetPasscode(int id, String passcode) throws ClassNotFoundException, SQLException {
     	boolean worked = DatabaseManager.changePasscode(id, passcode);
     	return worked;
     }
     
+    //Lets the staff change permission of a user of the site
     public static void ChangePermission(int user_id) {
     	DatabaseManager.updateUserType(user_id);
     }

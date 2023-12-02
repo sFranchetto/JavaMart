@@ -197,7 +197,6 @@ public class DatabaseManager {
 	                while (resultSet.next()) {
 	                    String sku = resultSet.getString("sku");
 
-	                    // Assuming you have a method GetProduct that returns a Product by SKU
 	                    Product product = Product.GetProduct(sku);
 	                    if (product != null) {
 	                        userCart.add(product);
@@ -268,7 +267,6 @@ public class DatabaseManager {
 	                    }
 	                }
 	            } else {
-	                // Handle the case where user with the given passcode is not found
 	                System.out.println("User not found for passcode: " + passcode);
 	            }
 	        }
@@ -302,7 +300,6 @@ public class DatabaseManager {
 	                updateQuantityStmt.executeUpdate();
 	            }
 	        } else {
-	            // Handle the case where user with the given passcode is not found
 	            System.out.println("User not found for passcode: " + passcode);
 	        }
 	    } catch (SQLException e) {
@@ -364,7 +361,6 @@ public class DatabaseManager {
 	                            removeProductStmt.executeUpdate();
 	                        }
 	                    } else {
-	                        // If the product is not in the cart, log a message
 	                        System.out.println("Product with SKU " + sku + " not found in the cart for user " + passcode);
 	                    }
 	                }
@@ -431,7 +427,6 @@ public class DatabaseManager {
 	            }
 	        }
 	    } catch (SQLException | ClassNotFoundException e) {
-	        // Handle SQL or class not found exception
 	        e.printStackTrace();
 	    }
 	}
@@ -456,7 +451,6 @@ public class DatabaseManager {
 	            System.out.println("User not found for passcode: " + user);
 	        }
 	    } catch (SQLException | ClassNotFoundException e) {
-	        // Handle SQL or class not found exception
 	        e.printStackTrace();
 	    }
 	}
@@ -569,7 +563,6 @@ public class DatabaseManager {
 	    boolean isShipped = false;
 
 	    try (Connection conn = doDbStuff()) {
-	        // Assuming you have a column named isShipped in your order_details table
 	        String selectSQL = "SELECT isShipped FROM orders WHERE order_id = ?";
 
 	        try (PreparedStatement pstmt = conn.prepareStatement(selectSQL)) {
@@ -614,7 +607,6 @@ public class DatabaseManager {
 	                            System.out.println("User passcode updated successfully");
 	                            return true;
 	                        } else {
-	                            // No rows were affected, order_id not found or passcode already updated
 	                            System.out.println("Error: Order not found or passcode already updated");
 	                            return false;
 	                        }
