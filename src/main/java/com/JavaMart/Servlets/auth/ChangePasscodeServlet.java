@@ -17,6 +17,7 @@ import javax.servlet.http.HttpSession;
 import java.sql.*;
 
 import com.JavaMart.DatabaseManager;
+import com.JavaMart.Classes.User;
 
 @WebServlet("/change_passcode")
 public class ChangePasscodeServlet extends HttpServlet {
@@ -29,14 +30,14 @@ public class ChangePasscodeServlet extends HttpServlet {
         
         try {
         	int id = DatabaseManager.getIDFromPasscode(passcode);
-        	boolean worked = DatabaseManager.changePasscode(newPasscode, id);
+        	boolean worked = User.SetPasscode(id, newPasscode);
         	
         	if(worked == true) {
 	        	session.setAttribute("successMessage", "Passcode successfully changed");
 	        	session.setAttribute("passcode", newPasscode);
 	        	res.sendRedirect("/JavaMart/products");
         	}else {
-        		session.setAttribute("failureMessage", "Passcode already in use! Pick a new one");
+        		session.setAttribute("failureMessage_pass", "Passcode already in use! Pick a new one");
         		res.sendRedirect("/JavaMart/change_passcode");
         	}
 

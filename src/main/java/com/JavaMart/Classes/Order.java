@@ -88,5 +88,10 @@ public class Order {
 		DatabaseManager.shipOrder(id, trackingNumber);
 		System.out.println("Shipped!" + id + " " + trackingNumber);
 	}
+	
+	public static boolean SetOrderOwner(int orderId, String passCode) throws ClassNotFoundException, SQLException {
+		boolean worked = DatabaseManager.claimOrder(orderId, passCode);
+		return worked;
+	}
 }
 

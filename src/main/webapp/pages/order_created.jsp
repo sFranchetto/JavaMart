@@ -21,7 +21,7 @@
             String orderId = request.getParameter("orderId");
             if (orderId != null) {
         %>
-            <p>Order ID: <%= orderId %></p>
+            <strong><p>Order ID: <%= orderId %></p></strong>
         <%
             }
         %>

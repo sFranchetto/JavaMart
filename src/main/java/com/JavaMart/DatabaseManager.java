@@ -103,13 +103,13 @@ public class DatabaseManager {
 	    }
 	}
 	
-	public static boolean changePasscode(String newPasscode, int id) throws SQLException, ClassNotFoundException {
+	public static boolean changePasscode(int id, String newPasscode) throws SQLException, ClassNotFoundException {
 	    try (Connection conn = doDbStuff()) {
 	        if (!isPasscodeExists(newPasscode, conn)) {
 	            String updateSQL = "UPDATE users SET passcode = ? WHERE id = ?";
 	            try (PreparedStatement pstmt = conn.prepareStatement(updateSQL)) {
-	                pstmt.setString(1, newPasscode);
-	                pstmt.setInt(2, id);
+	            	pstmt.setString(1, newPasscode);
+	            	pstmt.setInt(2, id);
 	                pstmt.executeUpdate();
 	                return true;
 	            }
@@ -586,5 +586,46 @@ public class DatabaseManager {
 
 	    return isShipped;
 	}
+	
+	public static boolean claimOrder(int orderId, String passcode) throws SQLException, ClassNotFoundException {
+	    try (Connection conn = doDbStuff()) {
+	        // Check if the order_id and user_id in the orders table are associated with the user_id from the users table where passcode is 'temp'
+	        String selectSQL = "SELECT user_id " +
+	                           "FROM orders " +
+	                           "WHERE order_id = ? AND user_id IN (SELECT id FROM users WHERE passcode = 'temp')";
 
+	        try (PreparedStatement pstmt = conn.prepareStatement(selectSQL)) {
+	            pstmt.setInt(1, orderId);
+
+	            try (ResultSet resultSet = pstmt.executeQuery()) {
+	                if (resultSet.next()) {
+	                    // The order_id and user_id are associated with the user_id from the users table where passcode is 'temp', update it
+	                    String updateSQL = "UPDATE orders " +
+	                                       "SET user_id = (SELECT id FROM users WHERE passcode = ?) " +
+	                                       "WHERE order_id = ?";
+	                    try (PreparedStatement updateStmt = conn.prepareStatement(updateSQL)) {
+	                        updateStmt.setString(1, passcode);
+	                        updateStmt.setInt(2, orderId);
+
+	                        int rowsAffected = updateStmt.executeUpdate();
+
+	                        if (rowsAffected > 0) {
+	                            // Update successful
+	                            System.out.println("User passcode updated successfully");
+	                            return true;
+	                        } else {
+	                            // No rows were affected, order_id not found or passcode already updated
+	                            System.out.println("Error: Order not found or passcode already updated");
+	                            return false;
+	                        }
+	                    }
+	                } else {
+	                    // No rows found, order_id and user_id are not associated with the user_id from the users table where passcode is 'temp'
+	                    System.out.println("Error: Order not associated with the 'temp' user passcode");
+	                    return false;
+	                }
+	            }
+	        }
+	    }
+	}
 }

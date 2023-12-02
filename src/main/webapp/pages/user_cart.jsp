@@ -92,9 +92,9 @@
 			%>
 			<p id="total-price"><strong> Total price: $<%= String.format("%.2f", total) %> </strong></p>
 			<% if (!(customer)) { %>
-			    <p> You are not logged in, please do so to finalize the order </p>
+			    <p> You are not logged in, remember the Order ID given to claim order! </p>
 			
-			    <form action="./login" method="get">
+			    <form action="./order_made" method="get">
 			        <button class="btn btn-primary">
 			            Continue to Checkout
 			        </button>

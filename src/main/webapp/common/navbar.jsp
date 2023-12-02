@@ -35,6 +35,9 @@
                         <li class="nav-item">
                             <a class="nav-link active" aria-current="page" href="/JavaMart/orders">My Orders</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="/JavaMart/claim_order">Claim Order</a>
+                        </li>
                     <%} else if(staff){ %>
                         <a class="nav-link active" aria-current="page" href="/JavaMart/orders?method=staff_orders">View Orders</a>
                         <a class="nav-link active" aria-current="page" href="/JavaMart/privileges">Edit Privileges</a>

@@ -16,11 +16,19 @@
 
     <div class="container mt-5">
         <%-- Display error message if it exists --%>
-        <% if (session.getAttribute("failureMessage") != null) { %>
-            <div class="alert alert-danger" role="alert">
-                <strong>Error:</strong> <%= session.getAttribute("failureMessage") %>
-            </div>
-        <% } %>
+        <% if (session.getAttribute("failureMessage_pass") != null) { %>
+		    <div id="error-message" class="alert alert-danger" role="alert">
+		        <strong>Error:</strong> <%= session.getAttribute("failureMessage_pass") %>
+		    </div>
+		
+		    <script>
+		        // JavaScript code to hide the error message after 5 seconds
+		        setTimeout(function() {
+		            document.getElementById('error-message').style.display = 'none';
+		        }, 5000);
+		    </script>
+		<% } %>
+
 
         <div class="row justify-content-center">
             <div class="col-md-6">
@@ -30,7 +38,7 @@
                         <form action="./change_passcode" method="post">
                             <div class="mb-3">
                                 <label for="passcode" class="form-label">Enter New Passcode</label>
-                                <input type="password" class="form-control" id="passcode" name="passcode" required>
+                                <input type="text" class="form-control" id="passcode" name="passcode" required>
                             </div>
                             <button type="submit" class="btn btn-primary">Change Passcode</button>
                         </form>

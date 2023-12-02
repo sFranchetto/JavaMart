@@ -27,8 +27,6 @@ public class LoginServlet extends HttpServlet{
 
         HttpSession session = req.getSession();
 
-        System.out.println(userInputForStaff);
-        System.out.println(userInputForUser);
         if (userInputForStaff != null) {
             try {
                 String temp = DatabaseManager.login(userInputForStaff);
