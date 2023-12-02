@@ -40,7 +40,7 @@ public class OrderDetail{
     }
     
     
-    
+    //Returns product name given the SKU
     public String getProductName(String id) {
     	Product prod = Product.GetProduct(id);
     	String sku = prod.getName();

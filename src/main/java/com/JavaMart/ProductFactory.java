@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import com.JavaMart.Classes.*;
 
+
 public class ProductFactory {
 	
 	static List<Product> products = new ArrayList<>();
@@ -25,6 +26,8 @@ public class ProductFactory {
 		products.add(new Product("GoPro HERO9 Black", "5K Ultra HD action camera with front display", "GoPro", "gopro-hero9-black", 449.99, "14"));
 		products.add(new Product("Canon EOS Rebel T8i", "24.1MP APS-C CMOS sensor DSLR camera", "Canon", "canon-eos-rebel-t8i", 899.99, "15"));
 	};
+	
+	
 	
 	
 	public static void add(Product product) {

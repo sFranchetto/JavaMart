@@ -61,7 +61,7 @@
 		            <button type="submit" class="btn btn-success">Ship Order</button>
 		        </form>
 		        <% } else { %>
-		        <p style="background-color: #ECE0D1;">Order is shipped</p>
+		        <p style="background-color: #ECE0D1;"><strong> Order is shipped</strong></p>
 		        <% } %>
 		    </td>
 		</tr>

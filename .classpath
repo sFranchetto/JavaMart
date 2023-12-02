@@ -13,5 +13,7 @@
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
+	<classpathentry kind="lib" path="C:/Users/Steven/Downloads/sqlite-jdbc-3.44.1.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Steven/Downloads/slf4j-api-1.7.36.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

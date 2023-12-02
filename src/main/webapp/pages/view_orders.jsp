@@ -13,22 +13,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-<script>
-			function incrementQuantity(sku) {
-				var quantityElement = document.getElementById("quantity-" + sku);
-				var currentQuantity = parseInt(quantityElement.textContent);
-				quantityElement.textContent = currentQuantity + 1;
-			}
-
-			function decrementQuantity(sku) {
-				var quantityElement = document.getElementById("quantity-" + sku);
-				var currentQuantity = parseInt(quantityElement.textContent);
-				if (currentQuantity > 0) {
-					quantityElement.textContent = currentQuantity - 1;
-				}
-			}
-			
-</script>
 </head>
 <body style="background-color: #dbc1ac;">
 <%@ include file="../common/navbar.jsp" %>
@@ -40,9 +24,9 @@
         </div>
         <div class="card-body" style="background-color: #ECE0D1;">
             <table class="table" style="background-color: #ECE0D1;">
-                <thead >
+                <thead>
                     <tr>
-                        <th scope="col" style="background-color: #ECE0D1;border-bottom: 1px solid #000000;"> Order Id</th >
+                        <th scope="col" style="background-color: #ECE0D1;border-bottom: 1px solid #000000;"> Order Id</th>
                         <th scope="col" style="background-color: #ECE0D1;border-bottom: 1px solid #000000;">User</th>
                         <th scope="col" style="background-color: #ECE0D1;border-bottom: 1px solid #000000;">Shipping Address </th>
                         <th scope="col" style="background-color: #ECE0D1;border-bottom: 1px solid #000000;"> Tracking Number </th>
@@ -66,11 +50,12 @@
                         <td style="background-color: #ECE0D1;"><%= order.getShippingAddress() %></td>
                         <td style="background-color: #ECE0D1;"><%= trackingNumber %></td>
                         <td style="background-color: #ECE0D1;"><%= isShipped %></td>
-                        <td style="background-color: #ECE0D1;">
-                        	<form action="./orders/<%=order.getId() %>" method="get">
-							    <button type="submit" class="btn btn-primary">Details</button>
-							</form>
+                        <td style="background-color: #ECE0D1; text-align: right;">
+                            <form action="./orders/<%= order.getId() %>" method="get">
+                                <button type="submit" class="btn btn-primary">Details</button>
+                            </form>
                         </td>
+                        
                     </tr>
                     <% 
                         } 
@@ -87,9 +72,7 @@
     </div>
 </div>
 
-    <!-- Bootstrap JS -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
-
+<!-- Bootstrap JS -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

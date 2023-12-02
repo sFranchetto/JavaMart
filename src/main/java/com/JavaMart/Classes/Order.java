@@ -5,14 +5,15 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import com.JavaMart.DatabaseManager;
 
 public class Order {
 	public static List<Order> order;
-	static Connection con = DatabaseManager.RunDB();
 	String user;
 	int id;
-	static boolean isShipped;
+	boolean isShipped;
 	String trackingNum;
 	String shipping_address;
 	
@@ -25,7 +26,7 @@ public class Order {
 	}
 	
 	public Order() {
-	    // No-argument constructor
+	    
 	}
 
 	
@@ -53,112 +54,49 @@ public class Order {
 		this.trackingNum = trackingNum;
 	}
 	
-	public static void shipOrder(String trackingNum) {
-		isShipped = true;
-		trackingNum = trackingNum;
-	}
 	
 	public List<Order> orders;
 	
-	public static void CreateOrder(String user, String shipping_address) throws SQLException {
-		Connection con = DatabaseManager.RunDB();
-		String stmt = "INSERT INTO Orders (user_id, shipping_address, isShipped) VALUES('"+user+"','"+shipping_address+"',"+ 0 +")";
-		int id = DatabaseManager.insertStatement(stmt, con);
-		//System.out.println(id);
+	//Creates an order after a user checks out in their cart
+	public static int CreateOrder(String user, String shipping_address) throws SQLException, ClassNotFoundException {
+		int order_id = DatabaseManager.createOrder(user, shipping_address);
+		DatabaseManager.createOrderDetails(order_id, user);
+		Cart.clearCart(user);
+		return order_id;
+	}
+	
+	//Returns all orders made by one user
+	public static List<Order> GetOrders(String user) throws SQLException, ClassNotFoundException{
+		List<Order> orders = new ArrayList<>();
+		orders = DatabaseManager.getOrdersByUserPasscode(user);
+		return orders;
+	}
+	
+	//Returns on order and it's details given an order id
+	public static List<OrderDetail> getOrder(int id) throws SQLException, ClassNotFoundException {
+		List<OrderDetail> order_detail= new ArrayList<>();
+		order_detail = DatabaseManager.getOrderDetails(id);
+		return order_detail;
 		
-		List<Product> cartProducts = Cart.getCart(user);
-		
-		for (Product product : cartProducts) {
-			String create_order_deatils = "INSERT INTO orderdetails (order_id, product_id, quantity) VALUES ("
-					+id+", "+product.getSKU() + ",1)";
-			DatabaseManager.insertStatement(create_order_deatils, con);
-		}
-		Cart.ClearCart(user);
 	}
 	
-	
-	public static List<Order> getOrders(String user) throws SQLException{
-		//System.out.println(user);
-		String stmt = "SELECT * FROM orders WHERE user_id = '" + user + "'";
-		ResultSet rs = DatabaseManager.getStatement(stmt, con);
-		order = new ArrayList<Order>();
-		
-		if (rs == null) {
-            order = new ArrayList<>();
-        }else {
-        	int order_id = rs.getInt("order_id");
-			String user_id = rs.getString("user_id");
-			String shipping_address = rs.getString("shipping_address");
-			String tracking_num = rs.getString("tracking_number");
-			boolean isShipped = rs.getBoolean("isShipped");
-			Order orderDetail = new Order(user_id, order_id, shipping_address, isShipped, tracking_num);
-			order.add(orderDetail);
-        	while(rs.next()) {
-				order_id = rs.getInt("order_id");
-				user_id = rs.getString("user_id");
-				shipping_address = rs.getString("shipping_address");
-				tracking_num = rs.getString("tracking_number");
-				orderDetail = new Order(user_id, order_id, shipping_address, isShipped, tracking_num);
-				order.add(orderDetail);
-			}
-        }
-		return order;
+	//Returns all orders made by all users
+	public static List<Order> GetAllOrders() throws SQLException, ClassNotFoundException{
+		List<Order> all_orders = new ArrayList<>();
+		all_orders = DatabaseManager.getAllOrder();
+		return all_orders;
 	}
 	
-	public static List<OrderDetail> getOrder(String user, int id) throws SQLException {
-		String stmt = "SELECT * FROM orderdetails WHERE order_id = " + id;
-		ResultSet rs = DatabaseManager.getStatement(stmt, con);
-		OrderDetail.orderDetail = new ArrayList<>();
-		int order_id = rs.getInt("order_id");
-		String product_id = rs.getString("product_id");
-		int quantity = rs.getInt("quantity");
-		OrderDetail od = new OrderDetail(order_id, product_id, quantity);
-		OrderDetail.orderDetail.add(od);
-		while(rs.next()) {
-			order_id = rs.getInt("order_id");
-			product_id = rs.getString("product_id");
-			quantity = rs.getInt("quantity");
-			od = new OrderDetail(order_id, product_id, quantity);
-			OrderDetail.orderDetail.add(od);
-		}
-		return OrderDetail.orderDetail;
+	//Ships the order, sets the isShipped to true and attaches the tracking number entered by the staff.
+	public static void ShipOrder(int id, String trackingNumber) throws SQLException, ClassNotFoundException{
+		DatabaseManager.shipOrder(id, trackingNumber);
+		System.out.println("Shipped!" + id + " " + trackingNumber);
 	}
 	
-	public static List<Order> GetAllOrders() throws SQLException{
-		String stmt = "SELECT * FROM Orders";
-		ResultSet rs = DatabaseManager.getStatement(stmt, con);
-		ArrayList<Order> allOrders = new ArrayList<>();
-		if(rs == null) {
-			Order noOrder = new Order();
-			allOrders.add(noOrder);
-			return allOrders;
-		}else {
-			int order_id = rs.getInt("order_id");
-			String user_id = rs.getString("user_id");
-			String shipping_address = rs.getString("shipping_address");
-			String tracking_num = rs.getString("tracking_number");
-			boolean isShipped = rs.getBoolean("isShipped");
-			Order orderDetail = new Order(user_id, order_id, shipping_address, isShipped, tracking_num);
-			allOrders.add(orderDetail);
-			
-		while(rs.next()) {
-			user_id = rs.getString("user_id");
-			shipping_address = rs.getString("shipping_address");
-			tracking_num = rs.getString("tracking_number");
-			order_id = rs.getInt("order_id");
-			isShipped = rs.getBoolean("isShipped");
-			orderDetail = new Order(user_id, order_id, shipping_address, isShipped, tracking_num);
-			allOrders.add(orderDetail);
-			}
-			return allOrders;
-		}
-	}
-	
-	public static void ShipOrder(int id, String trackingNumber) throws SQLException{
-		String stmt = "UPDATE Orders SET tracking_number = '" + trackingNumber + "', isShipped = true"
-	            + " WHERE order_id = " + id;
-		DatabaseManager.insertStatement(stmt, con);
-		shipOrder(trackingNumber);
+	//Sets an unclaimed order to a logged in user
+	public static boolean SetOrderOwner(int orderId, String passCode) throws ClassNotFoundException, SQLException {
+		boolean worked = DatabaseManager.claimOrder(orderId, passCode);
+		return worked;
 	}
 }
 

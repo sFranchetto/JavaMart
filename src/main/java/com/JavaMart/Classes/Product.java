@@ -75,6 +75,7 @@ public class Product {
         this.SKU = SKU;
     }
 
+    //Returns product by its name
     public static Product GetProductBySlug(String slug) {
     	List<Product> products = ProductFactory.returnAllProducts();
     	slug = slug.substring(1);
@@ -87,6 +88,7 @@ public class Product {
     	return null; //product not found by slug name.
     }
     
+    //Returns product by its unique identifier
     public static Product GetProduct(String sku) {
     	List<Product> products = ProductFactory.returnAllProducts();
     	for (Product product : products) {

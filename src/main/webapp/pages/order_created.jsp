@@ -17,6 +17,15 @@
     <div class="container mt-5">
         <h2>Order has been created!</h2>
         
+        <% 
+            String orderId = request.getParameter("orderId");
+            if (orderId != null) {
+        %>
+            <strong><p>Order ID: <%= orderId %></p></strong>
+        <%
+            }
+        %>
+        
         <a href="../"> Go back home</a>
     </div>
 
